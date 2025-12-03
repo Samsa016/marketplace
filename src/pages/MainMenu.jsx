@@ -3,6 +3,14 @@ import { CatalogApi } from './Catalog.jsx';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { MassiveBasket } from '../components/basket.jsx';
+import { FavouritesMassive } from '../components/favourites.jsx';
+import { HistoryMassive } from '../components/historyProduct.jsx';
+
+    export function SortPrice(massive, value) {
+        if (value == 'all') return massive
+        if (value == 'max') return [...massive].sort((number1, number2) => number2.price - number1.price)
+        if (value == 'min') return [...massive].sort((number1, number2) => number1.price - number2.price)
+    }
 
 export function MainMenu() {
     const [products, setProducts] = useState([]);
@@ -11,6 +19,9 @@ export function MainMenu() {
     const [ categories, setCategories ] = useState('all')
     const [ minSum, setMinSum ] = useState(0)
     const [ maxSum, setMaxSum ] = useState(0)
+    const { favourites, addFavourites } = useContext(FavouritesMassive)
+    const { addHistory } = useContext(HistoryMassive)
+    const [ sortPrice, setSortPrice ] = useState('all')
 
     useEffect(() => {
         const fetchResponse = async () => {
@@ -70,12 +81,18 @@ export function MainMenu() {
         }
     }
 
-    const finalProduct = numFinalSort()
+    const predFinalProduct = numFinalSort()
+
+    const sortFullProduct =  SortPrice(predFinalProduct, sortPrice)
+
 
     return (
         <div>
             <h1>Добро пожаловать в PerfectShop!</h1>
-            <Link to='/product/basket'>Корзина {basket.length-1}</Link>
+            <Link to='/product/basket'>Корзина {basket.length}</Link>
+            <Link to='/product/favourites'>Избранное {favourites.length}</Link>
+            <Link to='/product/historyViews'>История просмотра товаров</Link>
+            <Link to='/product/myorders'>Мои заказы</Link>
 
             <input 
                 type="text" onChange={(name) =>  setSearchProduct(name.target.value)} 
@@ -105,16 +122,23 @@ export function MainMenu() {
                 type='number'
             ></input>
 
+            <select onChange={(sortPr) => setSortPrice(sortPr.target.value)} value={sortPrice}>
+                <option value='all'>Сортировать по цене</option>
+                <option value='max'>Сортировать по возврастанию</option>
+                <option value='min'>Сортировать по убыванию</option>
+            </select>
+
             <div style={{display: "grid", gridTemplateColumns: "1fr 1fr 1fr"}}>
-                {finalProduct.length > 0 ?
-                (finalProduct.map((product) => (
+                {sortFullProduct.length > 0 ?
+                (sortFullProduct.map((product) => (
                     <div key={product.id} style={{border: "1px solid black", margin: "10px", padding: "10px"}}>
                         <img style={{width: "150px", height: "150px"}} src={product.images[0]} alt={product.title}></img>
                         <h2>{product.title}</h2>
                         <p>{product.price}</p>
                         <p>⭐ {product.rating}</p>
                         <button onClick={() => addToBasket(product)}>Добавить в корзину</button>
-                        <Link to={`/product/${product.id}`}>Подробнее</Link>
+                        <button onClick={() => addFavourites(product)}>Добавить в избранное</button>
+                        <Link to={`/product/${product.id}`} onClick={() => addHistory(product)}>Подробнее</Link>
                         
                     </div>    
                     )

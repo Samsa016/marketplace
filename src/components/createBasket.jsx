@@ -1,19 +1,33 @@
-import { useContext } from "react"
+import { useContext, useState, useEffect } from "react"
 import { MassiveBasket } from "./basket.jsx";
 import { Link } from "react-router-dom";
 
 export function CreateBasket() {
     const { basket, deleteFromBasket } = useContext(MassiveBasket)
+    const [ totalSum, setTotalSum ] = useState(0)
 
     if (!basket) {
         return <div>Ошибка: контекст не инициализирован</div>
     }
 
+    useEffect(() => {
+
+            const toSum = basket.reduce((sum, product) => {
+            const price = Number(product?.price) || 0; // берём product.price и приводим к числу
+            return sum + price;
+            
+        }, 0);
+
+        setTotalSum(toSum)
+
+    }, [basket])
     
     return (
         <div>
             <h1>Корзина</h1>
-             <Link to='/'>← Вернуться на главную страницу</Link>
+            <h2>Сумма товаров: {totalSum}</h2>
+            <Link to='/'>← Вернуться на главную страницу</Link>
+            <Link to='/product/buy'>Оформить заказ</Link>
             {basket.length > 0 ? (
                 <div>
                     {basket.map((pr, index) => {

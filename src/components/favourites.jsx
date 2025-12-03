@@ -4,6 +4,31 @@ import { useState, useEffect } from "react"
 
 export const FavouritesMassive = createContext()
 
-export function FavouritesProvider() {
+export function FavouritesProvider({ children }) {
     const [ favourites, setFavorites ] = useState([])
+
+    useEffect(() => {
+
+        const up = getFavourites()
+        setFavorites(up)
+        
+    }, [])
+
+    const addFavourites = (product) => {
+        const update = [...favourites, product]
+        setFavorites(update)
+        localStorage.setItem("favourites", JSON.stringify(favourites))   
+    }
+
+    const deleteFavorites = (deleteIndex) => {
+        const updateDel = favourites.filter((_, index) => index !== deleteIndex)
+        setFavorites(updateDel)
+        localStorage.setItem("favourites", JSON.stringify(favourites))
+    }
+
+    return (
+        <FavouritesMassive.Provider value={{favourites, addFavourites, deleteFavorites }}>
+            {children}
+        </FavouritesMassive.Provider>
+    )
 }

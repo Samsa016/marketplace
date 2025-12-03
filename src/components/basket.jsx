@@ -26,9 +26,14 @@ export function ContextBasket({ children }) {
         localStorage.setItem("basket", JSON.stringify(updateBasket))
     }
 
+    const clearBasket = () => {
+        setBasket([]);
+        localStorage.setItem("basket", JSON.stringify([]));
+    }
+
     
     return (
-        <MassiveBasket.Provider value={{ basket, addToBasket, deleteFromBasket }}>
+        <MassiveBasket.Provider value={{ basket, addToBasket, deleteFromBasket, clearBasket }}>
             {children}
         </MassiveBasket.Provider>
     )

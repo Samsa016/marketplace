@@ -7,11 +7,14 @@ import { useParams } from "react-router-dom";
 
 export function ProductInfo() {
     const { productId } = useParams();
-    const [products, setProducts] = useState([]);
+    const [ products, setProducts] = useState([]);
     const [ loading, setLoading ] = useState(true);
+    const [ selectedImageIndex, setSelectedImageIndex ] = useState(0);
+
+    const product = products.find((product) => product.id === parseInt(productId));
+    const productsByBrand = product ? products.filter((p) => p.brand == product.brand && p.id !== product.id) : [];
 
 
-    
     useEffect(() => {
         const fetchResponse = async () => {
             try {
@@ -33,16 +36,41 @@ export function ProductInfo() {
 
     }, [])
 
+    // сбрасываем выбранную картинку при смене товара — эффект должен вызываться всегда
+    useEffect(() => {
+        setSelectedImageIndex(0);
+    }, [product?.id]);
+
+    
+    
+    
     if (loading) return <div>Загрузка...</div>
-    const product = products.find((product) => product.id === parseInt(productId))
-     
+
     if (!product) {
         return <div>Продукт не найден</div>
     }
 
-    const productsByBrand = products.filter((p) => p.brand == product.brand && p.id !== product.id)
+    function renderGallery() {
+        const images = product?.images || [];
+        const mainSrc = images[selectedImageIndex] || images[0] || '';
 
-   
+        return (
+            <div>
+                <img src={mainSrc} alt={product.title} style={{ width: "400px", height: "400px" }} />
+                <div style={{ display: 'flex', marginTop: '10px' }}>
+                    {images.map((img, index) => (
+                        <img
+                            key={index}
+                            style={{ width: '70px', height: '50px', marginRight: '10px', cursor: 'pointer', border: selectedImageIndex === index ? '2px solid blue' : '1px solid gray' }}
+                            src={img}
+                            alt={`${product.title} ${index + 1}`}
+                            onClick={() => setSelectedImageIndex(index)}
+                            />
+                    ))}
+                </div>  
+            </div>
+        )
+    }
     
     return (
         <div>
@@ -50,7 +78,7 @@ export function ProductInfo() {
             <Link to="/">На главную страницу</Link>
 
             <div key={product.id}>
-                <img src={product.images[0]} alt={product.title} style={{ width: "200px", height: "200px" }}></img>
+                {renderGallery()}
                 <h2>{product.title}</h2>
                 <p>{product.price}</p>
                 <p>{product.rating}</p>
@@ -73,7 +101,7 @@ export function ProductInfo() {
                 <div>
                     {productsByBrand.map((prod) => (
                         <div key={prod.id} style={{ border: "1px solid black", margin: "10px", padding: "10px", width: "200px" }}>
-                            <img src={prod.images[0]} style={{ width: "100px", height: "100px" }} alt={prod.title}></img>
+                            <img src={prod.images?.[0] || ''} alt={prod.title} style={{ width: '100px', height: '80px' }}></img>
                             <h4>{prod.title}</h4>
                             <p>{prod.price}</p>
                             <Link to={`/product/${prod.id}`}>Подробнее</Link>
