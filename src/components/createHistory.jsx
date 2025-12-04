@@ -7,6 +7,7 @@ export function CreateHistory() {
 
     return (
         <div>
+            <h1 className='title_list'>PerfectShop</h1>
             <h1>Ваша история просмотренных заказов</h1>
             <Link to='/'>Вернуться на главную страницу</Link>
             {historyMassive.length > 0 ?
@@ -16,8 +17,8 @@ export function CreateHistory() {
                             if (!prod || !prod.images) return null
                             
                             return (
-                                <div key={index}>
-                                    <img src={prod.images[0]} style={{ height: "200px", width: "200px" }}></img>
+                                <div key={index} className='cards'>
+                                    <img src={prod.images[0]} style={{width: "200px", height: "250px"}}></img>
                                     <div>{prod.title}</div>
                                     <div>{prod.price}</div>
                                     <div>{prod.brand}</div>

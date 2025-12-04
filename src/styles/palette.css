@@ -1,0 +1,170 @@
+/* ...existing code... */
+body {
+  background-color: #f9fafb;
+  color: #111827;
+  font-family: Arial, sans-serif;
+}
+.cards {
+  background-color: #f3f4f6;
+  color: #111827;
+  border-radius: 8px;
+  border-color: #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin: 16px;
+}
+
+.title_list {
+  background-color: var(--color-primary-dark, #2563eb);
+  color: var(--color-text-inverted, #f3f4f6);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 80px;               
+  line-height: 64px;        
+  padding: 0 20px;
+  margin: 0;
+  position: fixed;       
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  text-align: start;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-start;
+
+}
+
+.search_input {
+  width: 700px;
+}
+
+img {
+  background-color: #f9fafb;
+  border-radius: 10px;
+}
+
+.basket_button {
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+}
+
+.title_list .search_input {
+  padding: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 15px;
+  width: 400px; 
+  height: 40px;
+  max-width: calc(100vw - 220px); 
+  box-sizing: border-box;
+  background: #ffffff;
+}
+
+.search_input {
+  padding: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.search_bar {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 540px;
+}
+
+.header-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 12px;
+  box-sizing: border-box;
+}
+
+.cart_widget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  min-width: 56px;
+  gap: 4px;
+}
+
+.cart_widget img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #ffffff;
+}
+
+.cart_label {
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 600;
+}
+
+.cart_count {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.price_card {
+  font-weight: bold;
+  color: #10b981;
+  font-size: 14px;
+}
+
+.title_card {
+  font-size: 10px;
+  font-weight: bold;
+  color: #111827;
+}
+
+.favor_button {
+  color: #ef4444;
+  border: none;
+  border-radius: 50%;
+}
+
+.delete_basket_button {
+  color: #ef4444;
+  border: none;
+  border-radius: 50%;
+}
+
+:root {
+  /* Основные цвета */
+  --color-primary: #3b82f6;     /* Синий - для кнопок, ссылок */
+  --color-primary-dark: #2563eb; /* Более темный синий */
+  
+  /* Нейтральные */
+  --color-gray-50: #f9fafb;     /* Светлейший фон */
+  --color-gray-100: #f3f4f6;    /* Светлый фон */
+  --color-gray-200: #e5e7eb;    /* Границы, разделители */
+  --color-gray-600: #4b5563;    /* Вторичный текст */
+  --color-gray-900: #111827;    /* Основной текст */
+  
+  /* Акцентные */
+  --color-success: #10b981;     /* Зеленый - успех, подтверждение */
+  --color-warning: #f59e0b;     /* Оранжевый - предупреждения */
+  --color-danger: #ef4444;      /* Красный - ошибки, удаление */
+  
+  /* Поверхности */
+  --color-surface: #ffffff;     /* Карточки, модалки */
+  --color-background: #f9fafb;  /* Фон страницы */
+  
+  /* Текст */
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-text-inverted: #ffffff;
+}

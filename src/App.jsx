@@ -7,7 +7,7 @@ import { CreateFavorites } from './components/createFavorites.jsx';
 import { CreateHistory } from './components/createHistory.jsx';
 import { BuyProduct } from './components/buyProduct/createBuyProduct.jsx';
 import { MyOrders } from './components/buyProduct/buyProduct.jsx';
-
+import './styles/palette.css'
 function App() {
     return (
         <Routes>

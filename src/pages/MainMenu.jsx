@@ -6,6 +6,7 @@ import { MassiveBasket } from '../components/basket.jsx';
 import { FavouritesMassive } from '../components/favourites.jsx';
 import { HistoryMassive } from '../components/historyProduct.jsx';
 
+
     export function SortPrice(massive, value) {
         if (value == 'all') return massive
         if (value == 'max') return [...massive].sort((number1, number2) => number2.price - number1.price)
@@ -87,18 +88,44 @@ export function MainMenu() {
 
 
     return (
-        <div>
-            <h1>Добро пожаловать в PerfectShop!</h1>
-            <Link to='/product/basket'>Корзина {basket.length}</Link>
-            <Link to='/product/favourites'>Избранное {favourites.length}</Link>
-            <Link to='/product/historyViews'>История просмотра товаров</Link>
-            <Link to='/product/myorders'>Мои заказы</Link>
+        <div style={{padding: "0px" }}>
+            <div>
+                <header className='title_list'>
+                    <h1>PerfectShop</h1>
+                    
+                    <div className="search_bar"> 
+                        <input
+                            type="text"
+                            onChange={(e) => setSearchProduct(e.target.value)}
+                            value={searchProduct}
+                            placeholder='Найти на PerfectShop'
+                            className='search_input'
+                        />
+                    </div>
 
-            <input 
-                type="text" onChange={(name) =>  setSearchProduct(name.target.value)} 
-                value={searchProduct}
-                placeholder='Поиск Товара'>
-            </input>
+                    <nav className="header-actions" aria-label="header actions">
+                        <Link to="/product/basket" className="cart_widget">
+                            <img
+                                src="https://www.pngplay.com/wp-content/uploads/1/Online-Shopping-Cart-PNG-Background-Image.png"
+                                alt="Корзина"
+                            />
+                            <span className="cart_label">Корзина</span>
+                            <span className="cart_count">{basket.length}</span>
+                        </Link>
+                    </nav>
+                </header>
+
+                <div className='main_content'>
+                    <Link to='/product/basket'>Корзина {basket.length}</Link>
+                    <Link to='/product/favourites'>Избранное {favourites.length}</Link>
+                    <Link to='/product/historyViews'>История просмотра товаров</Link>
+                    <Link to='/product/myorders'>Мои заказы</Link>
+                </div>
+            </div>
+
+
+
+
 
             <select onChange={(pr) => setCategories(pr.target.value)} value={categories}>
                 <option value="all">Все категории</option>
@@ -128,16 +155,16 @@ export function MainMenu() {
                 <option value='min'>Сортировать по убыванию</option>
             </select>
 
-            <div style={{display: "grid", gridTemplateColumns: "1fr 1fr 1fr"}}>
+            <div style={{display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr", gap: "10px", marginTop: "20px" }}>
                 {sortFullProduct.length > 0 ?
                 (sortFullProduct.map((product) => (
-                    <div key={product.id} style={{border: "1px solid black", margin: "10px", padding: "10px"}}>
-                        <img style={{width: "150px", height: "150px"}} src={product.images[0]} alt={product.title}></img>
-                        <h2>{product.title}</h2>
-                        <p>{product.price}</p>
+                    <div key={product.id} style={{margin: "10px", padding: "10px" }} className='cards'>
+                        <img style={{width: "200px", height: "250px"}} src={product.images[0]} alt={product.title}></img>
+                        <p className='price_card'>{product.price}$</p>
+                        <p className='title_card'>{product.title}</p>
                         <p>⭐ {product.rating}</p>
-                        <button onClick={() => addToBasket(product)}>Добавить в корзину</button>
-                        <button onClick={() => addFavourites(product)}>Добавить в избранное</button>
+                        <button className='basket_button' onClick={() => addToBasket(product)}><img src="https://www.pngplay.com/wp-content/uploads/1/Online-Shopping-Cart-PNG-Background-Image.png" style={{ width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover' }}></img></button>
+                        <button className='favor_button' onClick={() => addFavourites(product)}><img className='favor_like' src="https://w7.pngwing.com/pngs/714/146/png-transparent-heart-favorite-shopping-icon.png" style={{ width: '30px', height: '30px', borderRadius: '50%'}}></img></button>
                         <Link to={`/product/${product.id}`} onClick={() => addHistory(product)}>Подробнее</Link>
                         
                     </div>    

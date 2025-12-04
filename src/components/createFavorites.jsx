@@ -11,6 +11,7 @@ export function CreateFavorites() {
 
     return (
         <div>
+            <h1 className='title_list'>PerfectShop</h1>
             <h1>Ваши избранные товары</h1>
             <Link to="/">Вернуться в главное меню</Link>
             <div>
@@ -19,11 +20,11 @@ export function CreateFavorites() {
                         {favourites.map((fav, index) => {
                             if (!fav || !fav.images) return null
                             return (
-                                <div key={index}>
-                                    <img src={fav.images[0]} alt={fav.title} style={{ width: "150px", height: "150px" }}></img>
-                                    <h3>{fav.title}</h3>
-                                    <p>Цена: {fav.price}₽</p>
-                                    <button onClick={() => deleteFavorites(index)}>Удалить товар из корзины</button>`
+                                <div key={index} className='cards' style={{ width: "210px", margin: "10px", padding: "10px" }}>
+                                    <img src={fav.images[0]} alt={fav.title} style={{width: "200px", height: "250px"}}></img>
+                                    <p className="price_card">Цена: {fav.price}$</p>
+                                    <h3 className="title_card">{fav.title}</h3>
+                                    <button onClick={() => deleteFavorites(index)}>Удалить товар из избранного</button>`
                                 </div>
                         )})}
                     </div> 
