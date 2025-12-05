@@ -4,6 +4,15 @@ body {
   color: #111827;
   font-family: Arial, sans-serif;
 }
+
+.container_cards {
+  display: grid;
+  margin-top: 140px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  justify-items: center
+}
+
 .cards {
   background-color: #f3f4f6;
   color: #111827;
@@ -12,6 +21,15 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 16px;
   margin: 16px;
+  width: auto;
+}
+
+.cards img {
+  width: 200px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
 }
 
 .title_list {
@@ -53,6 +71,30 @@ img {
   color: #ffffff;
   border: none;
   border-radius: 50%;
+  width: auto;
+  height: auto;
+
+}
+
+.favor_button {
+  color: #ffffff;
+  border: none;
+  width: auto;
+  height: auto;
+}
+
+.basket_button img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%; 
+  object-fit: cover;
+}
+
+.favor_button img {
+  width: 30px; 
+  height: 30px; 
+  border-radius: 50%; 
+  object-fit: cover;
 }
 
 .title_list .search_input {
@@ -220,6 +262,195 @@ img {
   border: none;
   border-radius: 50%;
 }
+
+/* Адаптация для других устройств */
+@media (max-width: 768px) {
+  .title_list .search_input {
+    width: 200px; 
+  }
+
+  .title_list {
+    height: 40px;
+    font-size: 12px;
+    line-height: 30px;
+    width: 61%
+  }
+
+  .filters_menu {
+    width: 61%;
+    height: 30px;
+    font-size: 6px;
+    top: 40px;
+    gap: 6px;
+
+  }
+
+  .select_menu {
+    width: 70px; 
+    height: 15px;
+    font-size: 8px;
+    margin-left: 6px;
+    margin-right: 6px;
+    
+  }
+
+  .option_menu {
+    height: 25px;
+    font-size: 6px;
+    line-height: 25px;
+    width: 100px;        
+  }
+
+  
+  .title_list .search_input {
+    width: 100px;
+    height: 20px;
+  }
+  .cart_widget {
+    width: 15px;
+    height: 15px;
+    min-width: 31px;
+    margin-bottom: 13px;
+  }
+  .cart_count {
+    font-size: 5px;
+  }
+  .cart_label {
+    font-size: 5px;
+  }
+  .cart_widget img {
+    width: 15px;
+    height: 15px;
+  }
+
+  .search_input {
+    width: 60px;
+    height: 20px;
+  }
+
+  .header-actions {
+    gap: 5px;
+    padding-left: 6px;
+  }
+
+  .search_input ::placeholder {
+    font-size: 2px;
+  }
+  .search_bar {
+    max-width: 120px;
+  }
+  .container_cards {
+    grid-template-columns: 140px 140px 140px;
+    margin-top: 80px;
+  }
+
+  .cards {
+    width: 110px;
+    height: 200px;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .rating_card {
+    font-size: 7px;
+  }
+
+  .price_card {
+    font-size: 8px;
+  }
+
+  .title_card {
+    font-size: 6px;
+  }
+
+  .cards img {
+    width: 110px;
+    height: 120px;
+    gap: 4px;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .basket_button img {
+    width: 12px;
+    height: 12px;
+    margin-bottom: 8px;
+  }
+  .favor_button img {
+    width: 12px;
+    height: 12px;
+    margin-bottom: 8px;
+    margin-left: 6px;
+  }
+
+  .favor_button {
+    width: 15px;
+    height: 15px;
+    margin-left: 6px;
+  }
+
+  .basket_button {
+    width: 15px;
+    height: 15px;
+  }
+
+
+  
+}
+
+@media (max-width: 350px) {
+  .container_cards {
+    grid-template-columns: 1fr 1fr;
+  }
+  .select_menu {
+    width: 90px; 
+  }
+  .title_list .search_input {
+    width: 130px; 
+  }
+
+  .cards {
+    width: 125px;
+    height: 185px;
+
+  }
+  .cards img {
+    width: 110px;
+    height: 120px;
+    gap: 2px;
+    margin: 2px;
+    padding: 2px;
+  }
+  .price_card {
+    font-size: 10px;
+  }
+  .title_card {
+    font-size: 6px;
+  }
+  .rating_card {
+    font-size: 7px;
+  }
+  .basket_button img {
+    width: 10px;
+    height: 10px;
+  }
+  .basket_button {
+    width: 12px;
+    height: 12px;
+  }
+  .favor_button img {
+    width: 10px;
+    height: 10px;
+  }
+  .favor_button {
+    width: 12px;
+    height: 12px;
+  }
+
+
+}
+
+
 
 :root {
   /* Основные цвета */
