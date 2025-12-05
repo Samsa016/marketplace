@@ -23,6 +23,7 @@ export function MainMenu() {
     const { favourites, addFavourites } = useContext(FavouritesMassive)
     const { addHistory } = useContext(HistoryMassive)
     const [ sortPrice, setSortPrice ] = useState('all')
+    const [menuOpen, setMenuOpen] = useState(false)
 
     useEffect(() => {
         const fetchResponse = async () => {
@@ -85,14 +86,20 @@ export function MainMenu() {
     const predFinalProduct = numFinalSort()
 
     const sortFullProduct =  SortPrice(predFinalProduct, sortPrice)
-
-
     return (
         <div style={{padding: "0px" }}>
             <div>
                 <header className='title_list'>
                     <h1>PerfectShop</h1>
-                    
+
+                    <button
+                        className="burger_button"
+                        aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
+                        onClick={() => setMenuOpen(prev => !prev)}
+                    >
+                        <span className={`burger ${menuOpen ? 'open' : ''}`}></span>
+                    </button>
+
                     <div className="search_bar"> 
                         <input
                             type="text"
@@ -103,7 +110,7 @@ export function MainMenu() {
                         />
                     </div>
 
-                    <nav className="header-actions" aria-label="header actions">
+                    <nav className={`header-actions ${menuOpen ? 'open' : ''}`} aria-label="header actions">
                         <Link to="/product/basket" className="cart_widget">
                             <img
                                 src="https://www.pngplay.com/wp-content/uploads/1/Online-Shopping-Cart-PNG-Background-Image.png"
@@ -112,68 +119,73 @@ export function MainMenu() {
                             <span className="cart_label">Корзина</span>
                             <span className="cart_count">{basket.length}</span>
                         </Link>
+
+                        <Link to='/product/favourites' className="cart_widget">
+                            <img 
+                                src="https://i2.wp.com/getdrawings.com/vectors/vector-heart-png-15.png"
+                                alt="Избранное"
+                            />
+                            <span className="cart_label">Избранное</span>
+                            <span className="cart_count">{favourites.length}</span>
+                        </Link>
+
+                        <Link to='/product/historyViews' className="cart_widget">
+                            <img 
+                                src="https://www.svgrepo.com/show/65655/clock-of-circular-shape-at-two-o-clock.svg"
+                                alt="История просмотров"
+                            />
+                            <span className="cart_label">Недавно смотрели</span>
+                        </Link>
+
+                        <Link to='/product/myorders' className="cart_widget">
+                            <img 
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Icons8_flat_paid.svg/1200px-Icons8_flat_paid.svg.png"
+                                alt="Мои заказы"
+                            />
+                            <span className="cart_label">Мои заказы</span>
+                        </Link>
                     </nav>
                 </header>
 
-                <div className='main_content'>
-                    <Link to='/product/basket'>Корзина {basket.length}</Link>
-                    <Link to='/product/favourites'>Избранное {favourites.length}</Link>
-                    <Link to='/product/historyViews'>История просмотра товаров</Link>
-                    <Link to='/product/myorders'>Мои заказы</Link>
+                <div className='controls' style={{display: 'flex', gap: 8, alignItems: 'center', marginTop: 12}}>
+                    <input 
+                        className='select_menu'
+                        placeholder='Макс Цена'
+                        onChange={(num) => setMaxSum(parseInt(num.target.value || 0))}
+                        value={maxSum}
+                        type='number'
+                    />
+
+                    <select className='select_menu' onChange={(sortPr) => setSortPrice(sortPr.target.value)} value={sortPrice}>
+                        <option className="option_menu" value='all'>Сортировать по цене</option>
+                        <option className="option_menu" value='max'>Сортировать по возрастанию</option>
+                        <option className="option_menu" value='min'>Сортировать по убыванию</option>
+                    </select>
                 </div>
-            </div>
 
+                <div style={{display: "grid", marginTop: '24px', gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "10px", justifyItems: "center"}}>
+                    {sortFullProduct.length > 0 ? (
+                        sortFullProduct.map((product) => (
+                            <div key={product.id} style={{margin: "10px", padding: "10px" }} className='cards'>
+                                <Link to={`/product/${product.id}`} onClick={() => addHistory(product)}>
+                                    <img style={{width: "200px", height: "250px"}} src={product.images[0]} alt={product.title}></img>
+                                    <p className='price_card'>{product.price}$</p>
+                                    <p className='title_card'>{product.title}</p>
+                                    <p>⭐ {product.rating}</p>
+                                </Link>
 
-
-
-
-            <select onChange={(pr) => setCategories(pr.target.value)} value={categories}>
-                <option value="all">Все категории</option>
-                <option value="beauty">Красота</option>
-                <option value="fragrances">Духи</option>
-                <option value="furniture">Мебель</option>
-                <option value="groceries">Бакалея</option>
-            </select>
-            
-            <input 
-                placeholder='Мин Цена'
-                onChange={(num) => setMinSum(parseInt(num.target.value))}
-                value={minSum}
-                type='number'
-            ></input>
-
-            <input 
-                placeholder='Макс Цена'
-                onChange={(num) => setMaxSum(parseInt(num.target.value))}
-                value={maxSum}
-                type='number'
-            ></input>
-
-            <select onChange={(sortPr) => setSortPrice(sortPr.target.value)} value={sortPrice}>
-                <option value='all'>Сортировать по цене</option>
-                <option value='max'>Сортировать по возврастанию</option>
-                <option value='min'>Сортировать по убыванию</option>
-            </select>
-
-            <div style={{display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr", gap: "10px", marginTop: "20px" }}>
-                {sortFullProduct.length > 0 ?
-                (sortFullProduct.map((product) => (
-                    <div key={product.id} style={{margin: "10px", padding: "10px" }} className='cards'>
-                        <img style={{width: "200px", height: "250px"}} src={product.images[0]} alt={product.title}></img>
-                        <p className='price_card'>{product.price}$</p>
-                        <p className='title_card'>{product.title}</p>
-                        <p>⭐ {product.rating}</p>
-                        <button className='basket_button' onClick={() => addToBasket(product)}><img src="https://www.pngplay.com/wp-content/uploads/1/Online-Shopping-Cart-PNG-Background-Image.png" style={{ width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover' }}></img></button>
-                        <button className='favor_button' onClick={() => addFavourites(product)}><img className='favor_like' src="https://w7.pngwing.com/pngs/714/146/png-transparent-heart-favorite-shopping-icon.png" style={{ width: '30px', height: '30px', borderRadius: '50%'}}></img></button>
-                        <Link to={`/product/${product.id}`} onClick={() => addHistory(product)}>Подробнее</Link>
-                        
-                    </div>    
-                    )
-                )
-            ) : (
-                 <h1>Товары не найдены</h1>
-            )
-            }
+                                <button className='basket_button' onClick={() => addToBasket(product)}>
+                                    <img src="https://www.pngplay.com/wp-content/uploads/1/Online-Shopping-Cart-PNG-Background-Image.png" style={{ width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover' }} alt="Добавить" />
+                                </button>
+                                <button className='favor_button' onClick={() => addFavourites(product)}>
+                                    <img className='favor_like' src="https://i2.wp.com/getdrawings.com/vectors/vector-heart-png-15.png" style={{ width: '30px', height: '30px', borderRadius: '50%'}} alt="В избранное" />
+                                </button>
+                            </div>
+                        ))
+                    ) : (
+                        <h1>Товары не найдены</h1>
+                    )}
+                </div>
             </div>
         </div>
     )

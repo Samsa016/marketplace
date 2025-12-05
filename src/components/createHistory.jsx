@@ -8,7 +8,7 @@ export function CreateHistory() {
     return (
         <div>
             <h1 className='title_list'>PerfectShop</h1>
-            <h1>Ваша история просмотренных заказов</h1>
+            <h1 style={{ marginTop: '100px' }}>Ваша история просмотренных заказов</h1>
             <Link to='/'>Вернуться на главную страницу</Link>
             {historyMassive.length > 0 ?
                 (

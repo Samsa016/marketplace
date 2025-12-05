@@ -25,7 +25,7 @@ export function CreateBasket() {
     return (
         <div>
             <h1 className='title_list'>PerfectShop</h1>
-            <h1>Корзина</h1>
+            <h1 style={{ marginTop: '100px' }}>Корзина</h1>
             <h2>Сумма товаров: {totalSum}$</h2>
             <Link to='/'>← Вернуться на главную страницу</Link>
             <Link to='/product/buy'>Оформить заказ</Link>

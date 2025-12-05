@@ -12,7 +12,7 @@ export function CreateFavorites() {
     return (
         <div>
             <h1 className='title_list'>PerfectShop</h1>
-            <h1>Ваши избранные товары</h1>
+            <h1 style={{ marginTop: '100px' }}>Ваши избранные товары</h1>
             <Link to="/">Вернуться в главное меню</Link>
             <div>
                 {favourites.length > 0 ? (
@@ -24,7 +24,7 @@ export function CreateFavorites() {
                                     <img src={fav.images[0]} alt={fav.title} style={{width: "200px", height: "250px"}}></img>
                                     <p className="price_card">Цена: {fav.price}$</p>
                                     <h3 className="title_card">{fav.title}</h3>
-                                    <button onClick={() => deleteFavorites(index)}>Удалить товар из избранного</button>`
+                                    <button className="delete_basket_button" onClick={() => deleteFavorites(index)}><img src="https://w7.pngwing.com/pngs/298/507/png-transparent-rubbish-bins-waste-paper-baskets-computer-icons-recycling-bin-waste-rectangle-recycling-logo.png" style={{ width: '30px', height: '20px', borderRadius: '50%'}}></img></button>
                                 </div>
                         )})}
                     </div> 
@@ -34,6 +34,6 @@ export function CreateFavorites() {
                 }
             </div>
         </div>
-        
+
     )
 }
