@@ -205,6 +205,169 @@ img {
   justify-content: flex-start;
 }
 
+.basket_title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #111827;
+  margin-left: 50px;
+  margin-top: 100px;
+}
+
+
+.basket_container {
+  display: grid;
+  grid-template-columns: 200px 200px 200px 200px 200px;
+  gap: 12px;
+  margin-left: 50px;
+}
+
+.return_main_page {
+  font-size: 14px;
+  color: #3b82f6;
+  text-decoration: none;
+  margin-left: 50px;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+.cards_basket {
+  background-color: #f3f4f6;
+  color: #111827;
+  border-radius: 8px;
+  border: 5px solid #3b82f6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 2px;
+  margin: 10px;
+  width: 175px;
+  height: 285px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.cards_basket img {
+  width: 160px;
+  height: 190px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 0;
+}
+
+.delete_basket_button {
+  height: 30px;
+  font-size: 12px;
+  color: #f3f4f6;
+  border: none;
+  background-color: #3b82f6;
+  border-radius: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color .16s ease, transform .16s ease;
+}
+
+.delete_basket_button:hover {
+  background-color: #2563eb;
+}
+
+.delete_basket_button:hover img {
+  background-color: #2563eb;
+}
+
+.delete_basket_button img{
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  display: inline-block;
+  border-radius: 6px;
+  padding: 0px;                 /* важно: делает фон видимым */
+  box-sizing: content-box;
+  background-color: transparent;
+  transition: background-color .16s ease, transform .16s ease;
+  margin: 0; 
+}
+
+.price_card_basket {
+  font-weight: bold;
+  color: #10b981;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+}
+
+.title_card_basket {
+  font-size: 10px;
+  height: 12px;
+  font-weight: bold;
+  color: #111827;
+  margin: 6px 0 6px 0;
+  padding: 0;
+  line-height: 1.2;
+}
+
+.basket_sidebar {
+  position: fixed;
+  top: 200px;
+  right: 20px;
+  width: 320px;
+  height: 180px;
+  padding: 16px;
+  background-color: #f3f4f6;
+  border: 2px solid #e5e7eb;
+  border-radius: 20px;
+}
+
+.basket_summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.basket_summary h2 {
+
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #111827;
+
+}
+
+.button_order {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #f3f4f6;
+  border: none;
+  background-color: #3b82f6;
+  border-radius: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  box-sizing: border-box;
+  text-decoration: none;
+  transition: background-color .16s ease, transform .16s ease;
+}
+
+.button_order:hover {
+  background-color: #2563eb;
+}
+
+.basket_count_product {
+  font-size: 14px;
+  color: #4b5563;
+  margin-right: 64px;
+  
+}
+
 .select_menu {
   padding: 8px;
   border: 1px solid #e5e7eb;
@@ -257,11 +420,7 @@ img {
   color: #3b82f6;
 }
 
-.delete_basket_button {
-  color: #ef4444;
-  border: none;
-  border-radius: 50%;
-}
+
 
 /* Адаптация для других устройств */
 @media (max-width: 768px) {

@@ -25,26 +25,59 @@ export function CreateBasket() {
     return (
         <div>
             <h1 className='title_list'>PerfectShop</h1>
-            <h1 style={{ marginTop: '100px' }}>Корзина</h1>
-            <h2>Сумма товаров: {totalSum}$</h2>
-            <Link to='/'>← Вернуться на главную страницу</Link>
-            <Link to='/product/buy'>Оформить заказ</Link>
+            <h1 className='basket_title'>Корзина</h1>
+            <div style={{ fontSize: '14px', 
+                color: '#4b5563', 
+                marginLeft: '50px',
+                marginTop: '10px',
+                marginBottom: '10px' }}>
+                    Количество товаров {basket.length} шт.
+            </div>
+            <Link className="return_main_page" to='/'>← Вернуться на главную страницу</Link>
+
+            
+
             {basket.length > 0 ? (
-                <div>
+                <div className="basket_wrapper">
+                    <main className="basket_container">
                     {basket.map((pr, index) => {
                         if (!pr || !pr.images) return null;
                         return (
-                        <div className="cards" key={index} style={{border: "1px solid black", margin: "10px", padding: "10px", width: "200px"}}>
-                            <img src={pr.images[0]} alt={pr.title} style={{width: "200px", height: "250px"}}></img>
-                            <p className="price_card">Цена: {pr.price}$</p>
-                            <h3 className="title_card">{pr.title}</h3>
-                            <button className="delete_basket_button" onClick={() => deleteFromBasket(index)}><img src="https://w7.pngwing.com/pngs/298/507/png-transparent-rubbish-bins-waste-paper-baskets-computer-icons-recycling-bin-waste-rectangle-recycling-logo.png" style={{ width: '30px', height: '20px', borderRadius: '50%'}}></img></button>
+                        <div className="cards_basket" key={index}>
+                            <img src={pr.images[0]} alt={pr.title}></img>
+                            <p className="price_card_basket">Цена: {pr.price}$</p>
+                            <h3 className="title_card_basket">{pr.title}</h3>
+                            <button                               className="delete_basket_button"
+                                onClick={() => deleteFromBasket(index)}
+                                title="Удалить из корзины"
+                            >
+
+                            <span>Удалить из корзины</span>
+
+                            <img
+                                src="https://www.svgrepo.com/show/485930/trashcan.svg"
+                                alt="Удалить"
+                            />    
+                            </button>
                         </div>
                         )
                     })}
+
+
                     
+                </main>
+            <aside className="basket_sidebar">
+                <div className='basket_summary'>
+                    
+                    <h2>Итого: {totalSum}$</h2>
+                    <Link to='/product/buy' className="button_order">
+                        Оформить заказ →
+                    </Link>
                 </div>
-            
+
+            </aside>
+
+            </div>
             ) : (
                 <div>
                     <h1>Ваша корзина пуста</h1>
@@ -53,6 +86,8 @@ export function CreateBasket() {
                 
             )
             }
+            
             </div>
+            
     )
 }
