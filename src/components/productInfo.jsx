@@ -1,8 +1,11 @@
 import React from "react"
 import { CatalogApi } from '../pages/Catalog.jsx';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from "react-router-dom";
+import { MassiveBasket } from './basket.jsx';
+import { FavouritesMassive } from './favourites.jsx';
+import { FaArrowLeft } from "react-icons/fa";
 
 
 export function ProductInfo() {
@@ -10,6 +13,9 @@ export function ProductInfo() {
     const [ products, setProducts] = useState([]);
     const [ loading, setLoading ] = useState(true);
     const [ selectedImageIndex, setSelectedImageIndex ] = useState(0);
+    
+    const { addToBasket } = useContext(MassiveBasket);
+    const { addFavourites } = useContext(FavouritesMassive);
 
     const product = products.find((product) => product.id === parseInt(productId));
     const productsByBrand = product ? products.filter((p) => p.brand == product.brand && p.id !== product.id) : [];
@@ -36,7 +42,7 @@ export function ProductInfo() {
 
     }, [])
 
-    // сбрасываем выбранную картинку при смене товара — эффект должен вызываться всегда
+
     useEffect(() => {
         setSelectedImageIndex(0);
     }, [product?.id]);
@@ -55,13 +61,13 @@ export function ProductInfo() {
         const mainSrc = images[selectedImageIndex] || images[0] || '';
 
         return (
-            <div>
-                <img src={mainSrc} alt={product.title} style={{ width: "400px", height: "400px" }} />
-                <div style={{ display: 'flex', marginTop: '10px' }}>
+            <div className="product_gallery">
+                <img src={mainSrc} alt={product.title} className="product_main_image" />
+                <div className="product_thumbnails">
                     {images.map((img, index) => (
                         <img
                             key={index}
-                            style={{ width: '70px', height: '50px', marginRight: '10px', cursor: 'pointer', border: selectedImageIndex === index ? '2px solid blue' : '1px solid gray' }}
+                            className={`product_thumb ${selectedImageIndex === index ? 'active' : ''}`}
                             src={img}
                             alt={`${product.title} ${index + 1}`}
                             onClick={() => setSelectedImageIndex(index)}
@@ -73,45 +79,84 @@ export function ProductInfo() {
     }
     
     return (
-        <div>
+        <div className="product_page">
+            <div className="product_header">
+                <Link to="/" className="product_header_link"><FaArrowLeft /></Link>
+            </div>
 
-            <Link to="/">На главную страницу</Link>
-
-            <div key={product.id}>
+            <div className="product_container">
                 {renderGallery()}
-                <h2>{product.title}</h2>
-                <p>{product.price}</p>
-                <p>{product.rating}</p>
-                <p>{product.description}</p>
-                <p>{product.brand}</p>
-                <div>
-                    {product.reviews && product.reviews.map((reviews, index) => (
-                        <div key={index} style={{ border: "solid black 2px", width: "250px" }}>
-                            <p>{reviews.reviewerName}</p>
-                            <p>{reviews.rating}</p>
-                            <p>{reviews.comment}</p>
-                            <p>{reviews.date}</p>
-                        </div>
-                    ))}
+
+                <div className="product_info">
+                    <h1 className="product_title">{product.title}</h1>
+                    
+                    <div className="product_meta">
+                        <span className="product_brand">{product.brand}</span>
+                        <span className="product_category">{product.category || 'Товар'}</span>
+                        <div className="product_rating">⭐ {product.rating || 'N/A'}</div>
+                    </div>
+
+                    <div className="product_price_section">
+                        <span className="product_price">${product.price}</span>
+                    </div>
+
+                    <p className="product_description">{product.description}</p>
+
+                    <div className="product_actions">
+                        <button 
+                            className="product_btn product_btn_primary"
+                            onClick={() => addToBasket(product)}
+                        >
+                            🛒 В корзину
+                        </button>
+                        <button 
+                            className="product_btn product_btn_secondary"
+                            onClick={() => addFavourites(product)}
+                        >
+                            ❤️ В избранное
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div>
-                <h3>Другие продукты этого бренда:</h3>
-                <div>
-                    {productsByBrand.map((prod) => (
-                        <div key={prod.id} style={{ border: "1px solid black", margin: "10px", padding: "10px", width: "200px" }}>
-                            <img src={prod.images?.[0] || ''} alt={prod.title} style={{ width: '100px', height: '80px' }}></img>
-                            <h4>{prod.title}</h4>
-                            <p>{prod.price}</p>
-                            <Link to={`/product/${prod.id}`}>Подробнее</Link>
-                        </div>
-                    ))}
-                    {productsByBrand.length === 0 && <div>Других продуктов этого бренда нет.</div>}
+            {product.reviews && product.reviews.length > 0 && (
+                <div className="product_reviews_section" style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+                    <h2 className="product_reviews_title">Отзывы ({product.reviews.length})</h2>
+                    <div className="product_reviews_list">
+                        {product.reviews.map((review, index) => (
+                            <div key={index} className="product_review">
+                                <div className="product_review_header">
+                                    <h4 className="product_review_name">{review.reviewerName}</h4>
+                                    <span className="product_review_date">{review.date}</span>
+                                </div>
+                                <div className="product_review_rating">{'⭐'.repeat(review.rating)}</div>
+                                <p className="product_review_comment">{review.comment}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
-            
+            )}
 
+
+            <div className="product_related_section" style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+                <h2 className="product_related_title">Другие товары бренда {product.brand}</h2>
+                {productsByBrand.length > 0 ? (
+                    <div className="product_related_grid">
+                        {productsByBrand.map((prod) => (
+                            <div key={prod.id} className="product_related_card">
+                                <img src={prod.images?.[0] || ''} alt={prod.title} className="product_related_img" />
+                                <div className="product_related_info">
+                                    <h4 className="product_related_name">{prod.title}</h4>
+                                    <p className="product_related_price">${prod.price}</p>
+                                    <Link to={`/product/${prod.id}`} className="product_related_link">Подробнее</Link>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="product_related_empty">Других товаров этого бренда нет.</div>
+                )}
+            </div>
         </div>
     ) 
 }

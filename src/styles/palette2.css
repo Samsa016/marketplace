@@ -1,0 +1,265 @@
+.modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 16px;
+}
+
+.modal_content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal_close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.modal_close:hover {
+  background: #e5e7eb;
+  transform: scale(1.1);
+}
+
+.modal_body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding: 32px;
+}
+
+.modal_image_section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal_image {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.modal_info_section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal_title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.modal_brand,
+.modal_category,
+.modal_rating {
+  font-size: 14px;
+  color: #4b5563;
+  margin: 0;
+}
+
+.modal_description {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 16px 0;
+}
+
+.modal_price_section {
+  padding: 16px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.modal_price {
+  font-size: 32px;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.modal_actions {
+  display: flex;
+  gap: 12px;
+}
+
+.modal_btn {
+  flex: 1;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal_btn_primary {
+  background: #2563eb;
+  color: white;
+}
+
+.modal_btn_primary:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.modal_btn_primary:active {
+  transform: translateY(0);
+}
+
+.modal_btn_secondary {
+  background: #f3f4f6;
+  color: #111827;
+  border: 2px solid #e5e7eb;
+}
+
+.modal_btn_secondary:hover {
+  background: #e5e7eb;
+  border-color: #d1d5db;
+}
+
+.image_wrap {
+  position: relative;
+  display: block;
+}
+
+
+.image_wrap img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.image_wrap {
+  position: relative; 
+}
+
+
+.modal_button {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(6px) scale(0.98);
+  bottom: 10px;
+  background: rgba(218, 218, 218, 0.5);
+  color: rgba(0, 0, 0, 0.5);
+  border: none;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .14s ease, transform .14s ease, box-shadow .14s ease;
+}
+
+.cards:hover .modal_button,
+.image_wrap:hover .modal_button,
+.image_wrap:focus-within .modal_button {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0) scale(1);
+  box-shadow: 0 6px 18px rgba(37,99,235,0.18);
+}
+
+
+/* небольшой эффект при нажатии */
+.modal_button:active {
+  transform: translateX(-50%) scale(0.96);
+  filter: brightness(0.9);
+}
+
+
+@media (max-width: 420px) {
+  .modal_button {
+    padding: 6px 10px;
+    font-size: 12px;
+    bottom: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal_body {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .modal_title {
+    font-size: 20px;
+  }
+
+  .modal_price {
+    font-size: 24px;
+  }
+
+  .modal_actions {
+    flex-direction: column;
+  }
+
+  .modal_btn {
+    width: 100%;
+  }
+}
+
+/* Эффект нажатия на кнопки */
+.basket_button,
+.favor_button {
+  transition: all 0.15s ease;
+  transform: scale(1);
+}
+
+.basket_button:active,
+.favor_button:active {
+  transform: scale(0.95);
+  filter: brightness(0.85);
+}
+
+.basket_button:hover,
+.favor_button:hover {
+  filter: brightness(1.1);
+}

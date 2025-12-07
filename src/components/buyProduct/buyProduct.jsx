@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FaArrowLeft } from "react-icons/fa";
 
 export function MyOrders() {
     const orders = localStorage.getItem('orders') ? JSON.parse(localStorage.getItem('orders')) : [];
@@ -21,8 +22,9 @@ export function MyOrders() {
                 <h1>PerfectShop</h1>
             </header>
             <div className='order_list'>
-                <h2>Мои заказы</h2>
-                <Link to='/'>Вернуться на главную страницу</Link>
+                <Link style={{ color: 'black', marginBottom: '20px', fontSize: '20px' }} to='/'><FaArrowLeft /></Link>
+                
+                <h2 style={{ marginTop: "30px" }}>Мои заказы</h2>
                 {orders.length === 0 ? (
                     <p>У вас нет заказов.</p>
                 ) : (

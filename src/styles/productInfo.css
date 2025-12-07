@@ -1,0 +1,499 @@
+
+.product_page {
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.product_header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 100px;
+  margin-bottom: 20px;
+  padding: 0 20px;
+}
+
+.product_header_link {
+  text-decoration: none;
+  color: black;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 20px;
+  transition: color 0.2s;
+}
+
+.product_header_link:hover {
+  color: #1d4ed8;
+}
+
+
+.product_container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+}
+
+
+.product_gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product_main_image {
+  width: 100%;
+  height: 450px;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  transition: transform 0.2s;
+}
+
+.product_main_image:hover {
+  transform: scale(1.02);
+}
+
+.product_thumbnails {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.product_thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid #e5e7eb;
+  transition: all 0.2s;
+  background: #f9fafb;
+}
+
+.product_thumb:hover {
+  border-color: #06b6d4;
+  transform: scale(1.05);
+}
+
+.product_thumb.active {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* === ИНФОРМАЦИЯ О ТОВАРЕ === */
+.product_info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.product_title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.product_meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.product_brand {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.product_category {
+  font-size: 13px;
+  color: #6b7280;
+  text-transform: capitalize;
+}
+
+.product_rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.product_price_section {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.product_price {
+  font-size: 36px;
+  font-weight: 800;
+  color: #10b981;
+}
+
+.product_price_currency {
+  font-size: 20px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.product_description {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #4b5563;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #06b6d4;
+}
+
+/* === КНОПКИ ДЕЙСТВИЙ === */
+.product_actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.product_btn {
+  flex: 1;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.product_btn_primary {
+  background: #2563eb;
+  color: white;
+}
+
+.product_btn_primary:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.product_btn_primary:active {
+  transform: translateY(0);
+}
+
+.product_btn_secondary {
+  background: #e5e7eb;
+  color: #111827;
+  border: 2px solid #d1d5db;
+}
+
+.product_btn_secondary:hover {
+  background: #d1d5db;
+  border-color: #9ca3af;
+}
+
+/* Нежный эффект нажатия: как у кнопки корзины */
+.product_btn,
+.product_btn_secondary {
+  transition: all 0.15s ease;
+  transform: scale(1);
+}
+
+.product_btn:active,
+.product_btn_secondary:active {
+  transform: scale(0.95);
+  filter: brightness(0.85);
+}
+
+.product_btn:hover,
+.product_btn_secondary:hover {
+  filter: brightness(1.03);
+}
+
+/* === ОТЗЫВЫ === */
+.product_reviews_section {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 2px solid #e5e7eb;
+}
+
+.product_reviews_title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 16px;
+}
+
+.product_reviews_list {
+  display: grid;
+  gap: 16px;
+}
+
+.product_review {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s;
+}
+
+.product_review:hover {
+  box-shadow: 0 4px 12px rgba(2, 6, 23, 0.06);
+  transform: translateY(-2px);
+}
+
+.product_review_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 8px;
+}
+
+.product_review_name {
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+
+.product_review_date {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.product_review_rating {
+  font-size: 14px;
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.product_review_comment {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 8px 0 0 0;
+}
+
+.product_no_reviews {
+  padding: 24px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+/* === ПОХОЖИЕ ТОВАРЫ === */
+.product_related_section {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 2px solid #e5e7eb;
+}
+
+.product_related_title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 16px;
+}
+
+.product_related_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.product_related_card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(2, 6, 23, 0.04);
+}
+
+.product_related_card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.08);
+  border-color: #2563eb;
+}
+
+.product_related_img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  background: #f3f4f6;
+}
+
+.product_related_info {
+  padding: 12px;
+}
+
+.product_related_name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product_related_price {
+  font-size: 14px;
+  font-weight: 700;
+  color: #10b981;
+  margin: 0 0 8px 0;
+}
+
+.product_related_link {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #2563eb;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.product_related_link:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+.product_related_empty {
+  grid-column: 1 / -1;
+  padding: 24px;
+  text-align: center;
+  color: #6b7280;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+/* === АДАПТАЦИЯ === */
+@media (max-width: 1024px) {
+  .product_container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .product_main_image {
+    height: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .product_page {
+    padding: 12px;
+  }
+
+  .product_container {
+    padding: 16px;
+    border-radius: 12px;
+    gap: 24px;
+  }
+
+  .product_header {
+    margin-top: 90px;
+    padding: 0 12px;
+  }
+
+  .product_title {
+    font-size: 22px;
+  }
+
+  .product_price {
+    font-size: 28px;
+  }
+
+  .product_thumbnails {
+    gap: 6px;
+  }
+
+  .product_thumb {
+    width: 70px;
+    height: 70px;
+  }
+
+  .product_main_image {
+    height: 300px;
+  }
+
+  .product_actions {
+    flex-direction: column;
+  }
+
+  .product_btn {
+    width: 100%;
+  }
+
+  .product_related_grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .product_container {
+    padding: 12px;
+  }
+
+  .product_title {
+    font-size: 18px;
+  }
+
+  .product_price {
+    font-size: 24px;
+  }
+
+  .product_main_image {
+    height: 250px;
+  }
+
+  .product_thumbnails {
+    gap: 4px;
+  }
+
+  .product_thumb {
+    width: 60px;
+    height: 60px;
+  }
+
+  .product_meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .product_related_grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product_review {
+    padding: 12px;
+  }
+}

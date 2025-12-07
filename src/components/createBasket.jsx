@@ -1,6 +1,8 @@
 import { useContext, useState, useEffect } from "react"
 import { MassiveBasket } from "./basket.jsx";
 import { Link } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
+import { FaBasketShopping } from "react-icons/fa6";
 
 export function CreateBasket() {
     const { basket, deleteFromBasket } = useContext(MassiveBasket)
@@ -25,7 +27,8 @@ export function CreateBasket() {
     return (
         <div>
             <h1 className='title_list'>PerfectShop</h1>
-            <h1 className='basket_title'>Корзина</h1>
+            <Link className="return_main_page" to='/'><FaArrowLeft /></Link>
+            <h1 className='basket_title'>Корзина <FaBasketShopping /></h1>
             <div style={{ fontSize: '14px', 
                 color: '#4b5563', 
                 marginLeft: '50px',
@@ -33,7 +36,7 @@ export function CreateBasket() {
                 marginBottom: '10px' }}>
                     Количество товаров {basket.length} шт.
             </div>
-            <Link className="return_main_page" to='/'>← Вернуться на главную страницу</Link>
+            
 
             
 
@@ -47,7 +50,8 @@ export function CreateBasket() {
                             <img src={pr.images[0]} alt={pr.title}></img>
                             <p className="price_card_basket">Цена: {pr.price}$</p>
                             <h3 className="title_card_basket">{pr.title}</h3>
-                            <button                               className="delete_basket_button"
+                            <button                               
+                                className="delete_basket_button"
                                 onClick={() => deleteFromBasket(index)}
                                 title="Удалить из корзины"
                             >
@@ -69,7 +73,7 @@ export function CreateBasket() {
             <aside className="basket_sidebar">
                 <div className='basket_summary'>
                     
-                    <h2>Итого: {totalSum}$</h2>
+                    <h2>Итого: {totalSum.toFixed(2)}$</h2>
                     <Link to='/product/buy' className="button_order">
                         Оформить заказ →
                     </Link>
@@ -79,7 +83,7 @@ export function CreateBasket() {
 
             </div>
             ) : (
-                <div>
+                <div className="empty_basket">
                     <h1>Ваша корзина пуста</h1>
                     <div>Пополните товарами корзину</div>
                 </div>

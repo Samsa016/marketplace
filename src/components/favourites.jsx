@@ -17,13 +17,13 @@ export function FavouritesProvider({ children }) {
     const addFavourites = (product) => {
         const update = [...favourites, product]
         setFavorites(update)
-        localStorage.setItem("favourites", JSON.stringify(favourites))   
+        localStorage.setItem("favourites", JSON.stringify(update))   
     }
 
     const deleteFavorites = (deleteIndex) => {
         const updateDel = favourites.filter((_, index) => index !== deleteIndex)
         setFavorites(updateDel)
-        localStorage.setItem("favourites", JSON.stringify(favourites))
+        localStorage.setItem("favourites", JSON.stringify(updateDel))
     }
 
     return (

@@ -1,0 +1,111 @@
+/* Стили для страницы "Мои заказы" */
+/* Профессиональная сине-серая палитра, соответствующая общему стилю маркетплейса */
+
+:root {
+  --orders-bg: #f8fafc;
+  --orders-panel: #ffffff;
+  --orders-border: #e6eef8;
+  --orders-accent: #2563eb; /* основной синий */
+  --orders-muted: #6b7280;
+  --orders-success: #10b981;
+}
+
+.order_list {
+  margin-top: 120px; /* отступ от фиксированного заголовка */
+  padding: 28px 36px;
+  background: var(--orders-bg);
+  min-height: 60vh;
+  box-sizing: border-box;
+}
+
+.order_list h2 {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.order_list a {
+  color: var(--orders-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.orders_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.order_cards {
+  background: var(--orders-panel);
+  border: 1px solid var(--orders-border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.order_cards:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px rgba(2,6,23,0.06);
+}
+
+.id_order {
+  color: var(--orders-accent);
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.order_meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--orders-muted);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.order_items {
+  margin: 8px 0 0 0;
+  padding-left: 18px;
+}
+
+.order_items li {
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.order_total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.order_total .total_label {
+  color: var(--orders-muted);
+  font-weight: 600;
+}
+
+.order_total .total_value {
+  color: var(--orders-success);
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.order_empty {
+  padding: 40px 20px;
+  background: transparent;
+  color: var(--orders-muted);
+  font-size: 18px;
+}
+
+/* Адаптация */
+@media (max-width: 768px) {
+  .order_list { padding: 20px; margin-top: 100px; }
+  .orders_grid { grid-template-columns: 1fr; }
+}
