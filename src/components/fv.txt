@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 export const FavouritesMassive = createContext()
 
 export function FavouritesProvider({ children }) {
-    const [ favourites, setFavorites ] = useState([])
+    const [favourites, setFavorites] = useState([])
 
     useEffect(() => {
 

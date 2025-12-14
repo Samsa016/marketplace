@@ -1,7 +1,3 @@
-/* ========================================
-   СТИЛИ ДЛЯ ОФОРМЛЕНИЯ ЗАКАЗА
-   Палитра: синяя (#2563eb), зелёная (#10b981)
-   ======================================== */
 
 .buy_product_wrapper {
   background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
@@ -10,7 +6,7 @@
   font-family: Arial, sans-serif;
 }
 
-/* === КОНТЕЙНЕР ФОРМЫ === */
+
 .buy_product_container {
   max-width: 650px;
   margin: 0 auto;
@@ -20,7 +16,7 @@
   overflow: hidden;
 }
 
-/* === ЗАГОЛОВОК И ПРОГРЕСС === */
+
 .buy_product_header {
   background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
   color: white;
@@ -70,12 +66,10 @@
   color: white;
 }
 
-/* === ОСНОВНОЙ КОНТЕНТ === */
 .buy_product_content {
   padding: 20px 18px;
 }
 
-/* === ГРУППА ПОЛЕЙ === */
 .form_group {
   margin-bottom: 16px;
 }

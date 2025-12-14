@@ -1,13 +1,36 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft } from "react-icons/fa";
+import { Product } from '../../types/product';
 
-export function MyOrders() {
-    const orders = localStorage.getItem('orders') ? JSON.parse(localStorage.getItem('orders')) : [];
+export interface Order {
+    id: string;
+    date: string;
+    total: number;
+    items: Product[];
+}
 
-    function formatOrderDate(d = new Date()) {
+export function MyOrders(): JSX.Element {
+
+    const orders: Order[] = (() => {
+        try {
+            const stored = localStorage.getItem('orders');
+            return stored ? JSON.parse(stored) as Order[] : [];
+        } catch (error) {
+            console.error('Ошибка при чтении заказов из localStorage:', error);
+            return [];
+        }
     
-        const date = (d instanceof Date) ? d : new Date(d);       
+
+    })();
+
+    function formatOrderDate(d: string | Date = new Date()): string {
+    
+        const date = new Date(d);       
+
+        if (isNaN(date.getTime())) {
+            return 'Некорректная дата';
+        }
            
         return  date.toLocaleString('ru-RU', {
                 day: '2-digit', month: 'long', year: 'numeric',
@@ -33,12 +56,12 @@ export function MyOrders() {
                         <div className='order_cards' key={index}>
                             <h3 className='id_order'>Заказ ID: {order.id}</h3>
                             <p>Дата заказа: {formatOrderDate(order.date)}</p>
-                            <p>Сумма заказа: {order.total} ₽</p>
+                            <p>Сумма заказа: {order.total.toFixed(2)} $</p>
                             <h4>Товары в заказе:</h4>
                             <ul>
                                 {order.items.map((product, idx) => (
                                     <li key={idx}>
-                                        {product.title} - {product.price} ₽
+                                        {product.title} - {product.price} $
                                     </li>
                                 ))}
                             </ul>

@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
 import '../styles/footer.css';
 
-export function Footer() {
-    const currentYear = new Date().getFullYear();
+export function Footer(): JSX.Element {
+    const currentYear: number = new Date().getFullYear();
 
     return (
         <footer className="footer_wrapper">
             <div className="footer_container">
                 
-                {/* Основная информация */}
+
                 <div className="footer_section">
                     <h3 className="footer_section_title">📦 О компании</h3>
                     <div className="footer_content">
@@ -22,7 +22,7 @@ export function Footer() {
                     </div>
                 </div>
 
-                {/* Быстрые ссылки */}
+
                 <div className="footer_section">
                     <h3 className="footer_section_title">🔗 Навигация</h3>
                     <ul className="footer_links">
