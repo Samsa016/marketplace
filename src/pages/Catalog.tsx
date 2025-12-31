@@ -6,13 +6,13 @@ export function CatalogApi(): () => Promise<Product[]>  {
     const fetchResponse = async (): Promise<Product[]> => {
         try {
 
-            const response = await fetch("https://dummyjson.com/products")
+            const response = await fetch("http://127.0.0.1:8000/products");
             if (!response.ok) throw new Error(`Ошибка: ${response.status}`);
 
             const data = await response.json();
             if (!data) throw new Error(`Данные не получены`);
 
-            return data.products;
+            return data;
 
         } catch (error) {
             if (error instanceof Error) {

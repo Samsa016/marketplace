@@ -27,7 +27,7 @@ export function CreateBasket(): JSX.Element {
 
     return (
         <div>
-            <h1 className="title_list">PerfectShop</h1>
+            <Link className="title_list" to="/">PerfectShop</Link>
             <Link className="return_main_page" to="/"><FaArrowLeft /></Link>
             <h1 className="basket_title">Корзина <FaBasketShopping /></h1>
             

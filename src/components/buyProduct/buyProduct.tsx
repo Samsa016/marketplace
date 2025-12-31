@@ -42,7 +42,7 @@ export function MyOrders(): JSX.Element {
     return (
         <div>
             <header className='title_list'>
-                <h1>PerfectShop</h1>
+                <Link to="/">PerfectShop</Link>
             </header>
             <div className='order_list'>
                 <Link style={{ color: 'black', marginBottom: '20px', fontSize: '20px' }} to='/'><FaArrowLeft /></Link>

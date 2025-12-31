@@ -1,0 +1,102 @@
+
+
+.auth_modal {
+  max-width: 400px;
+  padding: 32px;
+  text-align: center;
+}
+
+.auth_modal_body {
+  padding-top: 20px;
+}
+
+.auth_title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 16px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.auth_description {
+  font-size: 16px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.auth_buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth_button {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.auth_button_primary {
+  background-color: #2563eb;
+  color: #f3f4f6;
+  border: 2px solid #2563eb;
+}
+
+.auth_button_primary:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.auth_button_secondary {
+  background-color: #f3f4f6;
+  color: #111827;
+  border: 2px solid #e5e7eb;
+}
+
+.auth_button_secondary:hover {
+  background-color: #e5e7eb;
+  border-color: #d1d5db;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.profile_button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  min-width: 56px;
+  gap: 4px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.profile_button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.profile_button svg {
+  width: 32px;
+  height: 32px;
+  fill: #111827;
+}
+
+.profile_button span {
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 600;
+}

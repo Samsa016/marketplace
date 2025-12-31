@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CatalogApi } from './Catalog';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useContext } from 'react';
 import { MassiveBasket } from '../components/basket';
 import { FavouritesMassive } from '../components/favourites';
@@ -10,6 +10,10 @@ import { Product } from '../types/product';
 import { BasketContextType } from '../types/basket';
 import { FavorContextType } from '../types/favorites';
 import { HistoryContextType } from '../types/history';
+import { CgProfile } from "react-icons/cg";
+import '../styles/Authorization.css';
+
+
 
 interface FlyState {
     start: { left: number; top: number; width: number; height: number; src: string };
@@ -34,6 +38,9 @@ export function MainMenu(): JSX.Element {
 
     const { basket, addToBasket } = masBasket || {};
 
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const [categories, setCategories] = useState<string>('all')
     const [minSum, setMinSum] = useState<number>(0)
     const [maxSum, setMaxSum] = useState<number>(0)
@@ -42,7 +49,6 @@ export function MainMenu(): JSX.Element {
     if (!masFavourites) {
         console.error('Контекст избранного не найден');
     }
-
     const { favourites, addFavourites } = masFavourites || {}
 
     const masHistory = useContext<HistoryContextType | null>(HistoryMassive);
@@ -59,7 +65,12 @@ export function MainMenu(): JSX.Element {
     const [flyItem, setFlyItem] = useState<FlyState | null>(null);
     const [flyFavorite, setFlyFavorite] = useState<{start: any, target: any} | null>(null);
 
+    const [authorizationModal, setAuthorizationModal] = useState<boolean>(false);
+
+    const [isAuth, setIsAuth] = useState<boolean>(false);
+
     const handleAddToBasket = (product: Product, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+
         try {
             if (!addToBasket) return;
             addToBasket(product);
@@ -91,7 +102,26 @@ export function MainMenu(): JSX.Element {
         } catch (error) {
             console.error('Ошибка при добавлении в корзину:', error);
         }
-    }
+        }
+
+        useEffect(() => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                setIsAuth(true);
+            } else {
+                setIsAuth(false);
+            }
+        }, [location]);
+
+        const handleLogout = () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('basket');
+            localStorage.removeItem('favourites');
+            setIsAuth(false);
+            
+            navigate('/');
+            window.location.reload();
+    };
 
         const handleAddToFavourites = (product: Product, e: React.MouseEvent<HTMLButtonElement, MouseEvent> ) => {
         try {
@@ -190,6 +220,7 @@ export function MainMenu(): JSX.Element {
 
     const sortFullProduct =  SortPrice(predFinalProduct, sortPrice) || predFinalProduct
 
+
     const openModal = (product: Product): void => {
         setSelectedProduct(product);
     }
@@ -202,7 +233,7 @@ export function MainMenu(): JSX.Element {
         <div style={{padding: "0px" }}>
             <div>
                 <header className='title_list'>
-                    <h1>PerfectShop</h1>
+                    <Link to="/">PerfectShop</Link>
                     
                     <div className="search_bar"> 
                         <input
@@ -215,6 +246,25 @@ export function MainMenu(): JSX.Element {
                     </div>
 
                     <nav className="header-actions" aria-label="header actions">
+                        
+                        {isAuth ? (
+                        <button 
+                        className="profile_button"
+                        onClick={() => handleLogout()}>
+                            <CgProfile />
+                            <span>Выйти</span>
+                        </button>
+                        ) : (
+                            <button 
+                            className="profile_button"
+                            onClick={() => setAuthorizationModal(true)}>
+                                <CgProfile />
+                                <span>Профиль</span>
+                            </button>
+                        )
+                        }
+
+
                         <Link to="/product/basket" className="cart_widget">
                             <img
                                 ref={cartRef}
@@ -361,6 +411,32 @@ export function MainMenu(): JSX.Element {
                     />
                 )}
             </AnimatePresence>
+            
+            {authorizationModal && (
+                <div className='modal_overlay' onClick={() => setAuthorizationModal(false)}>
+                    <div className='modal_content auth_modal' onClick={(e) => e.stopPropagation()}>
+                        <button className="modal_close" onClick={() => setAuthorizationModal(false)}>✕</button>
+
+                        <div className="auth_modal_body">
+                            <h2 className="auth_title">Добро пожаловать в PerfectShop!</h2>
+                            <p className="auth_description">
+                                Пожалуйста, войдите в свой аккаунт или зарегистрируйтесь, чтобы получить доступ ко всем функциям нашего маркетплейса.
+                            </p>
+                            <div className="auth_buttons">
+                                <Link to="/register" className="auth_button auth_button_primary" onClick={() => setAuthorizationModal(false)}>
+                                    Регистрация
+                                </Link>
+                                <Link to="/login" className="auth_button auth_button_secondary" onClick={() => setAuthorizationModal(false)}>
+                                    Войти
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                )
+            }
+
+
 
             {selectedProduct && (
                 <div className='modal_overlay' onClick={closeModal}>

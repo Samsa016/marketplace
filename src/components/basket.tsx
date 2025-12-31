@@ -14,38 +14,120 @@ export function ContextBasket({ children }: ContextBasketProps): JSX.Element {
     const [basket, setBasket] = useState<Product[]>([]);
 
     useEffect(() => {
-        try {
-            const loadedBasket = getBasket();
-            if (Array.isArray(loadedBasket)) {
-                setBasket(loadedBasket as Product[])
-            } else {
+        const token = localStorage.getItem('token');
+
+        if (token) {
+            fetch("http://localhost:8000/basket", {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            })
+            .then(res => {
+                if (res.ok) return res.json();
+                throw new Error('Ошибка при загрузке корзины с сервера');
+            })
+            .then(serverBasket => {
+                setBasket(serverBasket);
+                console.log("Корзина загружена с сервера");
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            })
+
+        } else {
+            try {
+                const loadedBasket = getBasket();
+                if (Array.isArray(loadedBasket)) {
+                    setBasket(loadedBasket as Product[])
+                } else {
+                    setBasket([]);
+                }
+            } catch (error) {
+                console.error('Ошибка при загрузке корзины:', error);
                 setBasket([]);
             }
-        } catch (error) {
-            console.error('Ошибка при загрузке корзины:', error);
-            setBasket([]);
         }
+
 
     }, [])
 
-    const addToBasket = (product: Product): void => {
+const addToBasket = (product: Product): void => {
+
         if (basket.some(p => p.id === product.id)) return;
-        const updateBasket = [...basket, product]
+
+        const updateBasket = [...basket, { ...product, quantity: 1 }];
         setBasket(updateBasket);
-        try {
-            localStorage.setItem('basket', JSON.stringify(updateBasket));
-        } catch (error) {
-            console.log('Ошибка при сохранении корзины:', error);
+
+        const token = localStorage.getItem('token');
+
+        if (token) {
+
+            console.log("Отправляем на сервер ID:", Number(product.id)); // Лог для проверки
+
+            fetch("http://localhost:8000/basket/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+
+                body: JSON.stringify({ 
+                    product_id: Number(product.id), 
+                    quantity: 1 
+                })
+            })
+            .then(async response => {
+                if (!response.ok) {
+
+                    const errData = await response.json();
+                    console.error("Детали ошибки сервера:", errData);
+                    throw new Error('Ошибка на сервере');
+                }
+                console.log("Товар успешно сохранен в БД");
+            })
+            .catch(error => console.error(error));
+        } else {
+
+            try {
+                localStorage.setItem('basket', JSON.stringify(updateBasket));
+            } catch (error) {
+                console.log('Ошибка при сохранении в localStorage:', error);
+            }
         }
     }
 
-    const deleteFromBasket = (deleteToIndex: number): void => {
+const deleteFromBasket = (deleteToIndex: number): void => {
+
+        const productToDelete = basket[deleteToIndex];
+        
         const updateBasket = basket.filter((_,index) => index !== deleteToIndex)
         setBasket(updateBasket);
-        try {
-            localStorage.setItem('basket', JSON.stringify(updateBasket));
-        } catch (error) {
-            console.log('Ошибка при сохранении корзины:', error);
+
+        const token = localStorage.getItem('token');
+
+
+        if (token && productToDelete) {
+            fetch("http://localhost:8000/basket/remove", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+
+                body: JSON.stringify({ product_id: productToDelete.id, quantity: 1 })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Ошибка на сервере');
+                console.log("Товар удален из БД");
+            })
+            .catch(error => console.error(error));
+        } else {
+
+            try {
+                localStorage.setItem('basket', JSON.stringify(updateBasket));
+            } catch (error) {
+                console.log('Ошибка при сохранении корзины:', error);
+            }
         }
     }
 

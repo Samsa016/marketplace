@@ -1,0 +1,102 @@
+/* ===== ВХОД ===== */
+
+.login_form {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 40px;
+  background-color: var(--color-surface, #ffffff);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--color-gray-200, #e5e7eb);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.login_form h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary, #111827);
+  margin-bottom: 32px;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.login_form p {
+  margin-bottom: 20px;
+}
+
+.login_form input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--color-gray-200, #e5e7eb);
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--color-text-primary, #111827);
+  background-color: var(--color-gray-50, #f9fafb);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+.login_form input:focus {
+  outline: none;
+  border-color: var(--color-primary, #3b82f6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background-color: #ffffff;
+}
+
+.login_form input::placeholder {
+  color: var(--color-text-secondary, #4b5563);
+}
+
+.login_form button {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: var(--color-primary, #3b82f6);
+  color: var(--color-text-inverted, #ffffff);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 10px;
+}
+
+.login_form button:hover {
+  background-color: var(--color-primary-dark, #2563eb);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+}
+
+.login_form button:active {
+  transform: translateY(0);
+}
+
+.login_form .error_message {
+  color: var(--color-danger, #ef4444);
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.login_form .error_message a {
+  color: var(--color-primary, #3b82f6);
+  text-decoration: none;
+}
+
+.login_form .error_message a:hover {
+  text-decoration: underline;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+  .login_form {
+    margin: 20px;
+    padding: 30px 20px;
+  }
+
+  .login_form h2 {
+    font-size: 24px;
+  }
+}

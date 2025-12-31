@@ -1,0 +1,99 @@
+/* ===== РЕГИСТРАЦИЯ ===== */
+
+.registration_form {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 40px;
+  background-color: var(--color-surface, #ffffff);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--color-gray-200, #e5e7eb);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.registration_form h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary, #111827);
+  margin-bottom: 32px;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.registration_form p {
+  margin-bottom: 20px;
+}
+
+.registration_form input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--color-gray-200, #e5e7eb);
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--color-text-primary, #111827);
+  background-color: var(--color-gray-50, #f9fafb);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+.registration_form input:focus {
+  outline: none;
+  border-color: var(--color-primary, #3b82f6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background-color: #ffffff;
+}
+
+.registration_form input::placeholder {
+  color: var(--color-text-secondary, #4b5563);
+}
+
+.registration_form button {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: var(--color-primary, #3b82f6);
+  color: var(--color-text-inverted, #ffffff);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  font-family: 'Montserrat', sans-serif;
+  margin-top: 10px;
+}
+
+.registration_form button:hover {
+  background-color: var(--color-primary-dark, #2563eb);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+}
+
+.registration_form button:active {
+  transform: translateY(0);
+}
+
+.registration_form a {
+  color: var(--color-primary, #3b82f6);
+  text-decoration: none;
+  font-weight: 500;
+  margin-right: 20px;
+  transition: color 0.2s ease;
+}
+
+.registration_form a:hover {
+  color: var(--color-primary-dark, #2563eb);
+  text-decoration: underline;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+  .registration_form {
+    margin: 20px;
+    padding: 30px 20px;
+  }
+
+  .registration_form h2 {
+    font-size: 24px;
+  }
+}

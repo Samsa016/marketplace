@@ -17,7 +17,7 @@ export function CreateHistory(): JSX.Element {
 
     return (
         <div>
-            <h1 className='title_list'>PerfectShop</h1>
+            <Link className='title_list' to="/">PerfectShop</Link>
             <Link className="return_main_page" to='/'><FaArrowLeft /></Link>
             <h1 className='history_title' style={{ marginTop: '100px' }}>Ваша история просмотренных товаров</h1>
             

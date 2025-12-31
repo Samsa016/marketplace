@@ -64,7 +64,14 @@ body {
   gap: 12px;
   justify-content: flex-start;
   border: 2px solid #3b82f6;
+  text-decoration: none;
+  font-size: 32px;
 
+}
+
+.title_list a {
+  text-decoration: none;
+  color: var(--color-text-inverted, #f3f4f6);
 }
 
 .search_input {
