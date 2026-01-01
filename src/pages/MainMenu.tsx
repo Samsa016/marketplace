@@ -117,6 +117,7 @@ export function MainMenu(): JSX.Element {
             localStorage.removeItem('token');
             localStorage.removeItem('basket');
             localStorage.removeItem('favourites');
+            localStorage.removeItem('history');
             setIsAuth(false);
             
             navigate('/');
@@ -334,8 +335,8 @@ export function MainMenu(): JSX.Element {
 
                 <select className='select_menu' onChange={(sortPr: React.ChangeEvent<HTMLSelectElement>) => setSortPrice(sortPr.target.value)} value={sortPrice}>
                     <option className="option_menu" value='all'>Сортировать по цене</option>
-                    <option className="option_menu" value='max'>Сортировать по возврастанию</option>
-                    <option className="option_menu" value='min'>Сортировать по убыванию</option>
+                    <option className="option_menu" value='max'>Сортировать по убыванию</option>
+                    <option className="option_menu" value='min'>Сортировать по возрастанию</option>
                 </select>
             </div>
 

@@ -36,12 +36,15 @@ class ProductInBasket(BaseModel):
 class ProductInFavorite(BaseModel):
     product_id: int
 
+class ProductInHistory(BaseModel):
+    product_id: int
+
 class UserLogin(BaseModel):
     username: str
     password: str
     localstorage_basket: Optional[List[ProductInBasket]] = None
     localstorage_favorites: Optional[List[ProductInFavorite]] = None
-
+    localstorage_history: Optional[List[ProductInHistory]] = None
 
 class Token(BaseModel):
     access_token: str
@@ -121,12 +124,25 @@ async def login_user(user: UserLogin, db: Session = Depends(get_db)):
     if not user_db or not verify_password(user.password, user_db.password_hash):
         raise HTTPException(status_code=400, detail="The user was not found")
 
+    if user.localstorage_history:
+        for product in user.localstorage_history:
+            history_item = db.query(models.HistoryDB).filter(
+                models.HistoryDB.user_id == user_db.id,
+                models.HistoryDB.product_id == product.product_id
+            ).first()
+            if not history_item:
+                new_history_item = models.HistoryDB(
+                    user_id=user_db.id,
+                    product_id=product.product_id
+                )
+                db.add(new_history_item)
+
     if user.localstorage_favorites:
         for product in user.localstorage_favorites:
             favorite_item = db.query(models.FavoriteDB).filter(
                 models.FavoriteDB.user_id == user_db.id,
                 models.FavoriteDB.product_id == product.product_id
-            )
+            ).first()
             if not favorite_item:
                 new_favorite_item = models.FavoriteDB(
                     user_id=user_db.id,

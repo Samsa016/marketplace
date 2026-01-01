@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 from typing import Optional, Dict, Union, List
-from auth import get_current_user, User, router as auth_router, get_current_user, ProductInBasket, ProductInFavorite
+from auth import get_current_user, User, router as auth_router, get_current_user, ProductInBasket, ProductInFavorite, ProductInHistory
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
 from sqlalchemy.orm import Session
@@ -86,10 +86,6 @@ async def read_product(productid: int):
 @app.get("/categories/{categoryid}")
 async def read_category(categoryid: int):
     return ("Category ID requested:", categoryid)
-
-@app.get("/history")
-async def read_history(history: str):
-    return ("Вы зашли в историю")
 
 async def get_products_from_api(url: str):
     async with httpx.AsyncClient() as client:
@@ -221,7 +217,41 @@ async def remove_from_favorites(item: ProductInFavorite, current_user: User = De
     db.commit()
     return {"message": "Товар удален из избранного"}
 
+@app.get("/history", response_model=List[Product])
+async def get_history(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    history_items = db.query(models.HistoryDB).filter(models.HistoryDB.user_id == current_user.id).order_by(models.HistoryDB.viewed_at.desc()).all()
+    products_in_history = []
+    async with httpx.AsyncClient() as client:
+        for item in history_items:
+            try:
+                response = await client.get(f"https://dummyjson.com/products/{item.product_id}")
 
+                if response.status_code == 200:
+                    data = response.json()
+                    product = Product(**data)
+                    products_in_history.append(product)
+            except Exception as e:
+                print(f"Ошибка получения товара {item.product_id}: {e}")
+    return products_in_history
+
+@app.post("/history/add")
+async def add_to_history(item: ProductInHistory, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    history_item = db.query(models.HistoryDB).filter(
+        models.HistoryDB.user_id == current_user.id,
+        models.HistoryDB.product_id == item.product_id
+    ).first()
+    if history_item:
+        db.delete(history_item)
+        db.commit()
+    new_history_item = models.HistoryDB(
+        user_id=current_user.id,
+        product_id=item.product_id
+    )
+
+    db.add(new_history_item)
+    db.commit()
+    return {"message": "История обновлена"}
+    
 
 app.include_router(
     auth_router,
