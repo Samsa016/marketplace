@@ -5,7 +5,7 @@ import { MassiveBasket } from '../components/basket';
 import { FavouritesMassive } from '../components/favourites';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Product, Review } from '../types/product'
-
+import { SkeletonProductInfo } from "../components/SkeletonAdd"
 
 
 export function ProductInfo(): JSX.Element {
@@ -58,7 +58,7 @@ export function ProductInfo(): JSX.Element {
         setSelectedImageIndex(0);
     }, [product?.id]);
 
-    if (loading) return <div>Загрузка...</div>;
+    if (loading) return SkeletonProductInfo();
     if (!product) return <div>Продукт не найден</div>;
 
     function renderGallery() {

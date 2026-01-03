@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from database import SessionLocal, engine, get_db
 from models import BasketDB
 import models
+from datetime import datetime
 
 class Review(BaseModel):
     reviewerName: str
@@ -38,13 +39,18 @@ class Product(BaseModel):
     minimumOrderQuantity: Optional[int] = None
     meta: Optional[Dict[str, Optional[str]]] = None
     quantity: Optional[int] = None
-    
+
+class OrderItemProduct(BaseModel):
+    product_id: int
+    quantity: int
+    price: float
+    title: Optional[str]
 class Order(BaseModel):
     id: Optional[int] = None
     date: str
     total: float
-    items: List[dict]
-    customer: dict
+    items: List[OrderItemProduct]
+
 
 app = FastAPI()
 
@@ -100,22 +106,114 @@ async def get_products_from_api(url: str):
             print(f"Error: {e}")
             return []
         
-orders: List[Order] = []
 
-@app.get("/product/myorders")
-async def get_my_orders(current_user: User = Depends(get_current_user)):
-    return {
-        "message": "Это мои заказы",
-        "user": current_user.username,
-        "items": orders
-    }
+@app.get("/product/myorders", response_model=List[Order])
+async def check_myorder(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    orders = db.query(models.OrderDB).filter(current_user.id == models.OrderDB.user_id).all()
+    
+    final_orders = []
+    
+    async with httpx.AsyncClient() as client:
+        for order in orders:
+            current_order = []
 
-@app.post("/product/buy")
-async def create_order(current_user: User = Depends(get_current_user)):
-    return {
-        "message": "Заказ создан",
-        "user": current_user.username
-    }
+            for item in order.items:
+
+                product_title = "Товар удален"
+    
+                try:
+                    response = await client.get(f"https://dummyjson.com/products/{item.product_id}")
+                    if response.status_code == 200:
+                        data = response.json()
+                        product_title = data.get("title", "Unknown")
+                except Exception:
+                    pass
+
+                current_order.append(OrderItemProduct(
+                    product_id=item.product_id,
+                    quantity=item.quantity,
+                    price=item.price_at_purchase,
+                    title=product_title
+                ))
+
+            final_orders.append(Order(
+                id=order.id,
+                date=str(order.date),
+                total=order.total_price,
+                items=current_order
+            ))
+            
+    return final_orders
+
+@app.post("/product/buy", response_model=Order)
+async def create_order(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    user = db.query(models.UserDB).filter(models.UserDB.id == current_user.id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    basket = db.query(models.BasketDB).filter(models.BasketDB.user_id == user.id).all()
+    if not basket:
+        raise HTTPException(status_code=400, detail="Basket is empty")
+
+    tot_price = 0.0
+    order_items_to_save = []
+    response_items = []
+
+    async with httpx.AsyncClient() as client:
+        for product in basket:
+                response = await client.get(f"https://dummyjson.com/products/{product.product_id}")
+                if response.status_code == 200:
+                    data = response.json()
+                    prod_final = Product(**data)
+
+                    tot_price += prod_final.price
+
+                    order_items_to_save.append({
+                        "product_id" : prod_final.id,
+                        "quantity" : product.quantity,
+                        "price_at_purchase" : prod_final.price
+                    })
+
+                    response_items.append(OrderItemProduct(
+                    product_id=prod_final.id,
+                    quantity=product.quantity,
+                    price=prod_final.price,
+                    title=prod_final.title
+                ))
+                    
+                else:
+                    print(f"Ошибка товара {product.product_id}")
+
+    
+    new_order = models.OrderDB(
+        user_id=user.id,
+        total_price=tot_price,
+        date=datetime.utcnow()
+    )
+    db.add(new_order)
+    db.commit()
+    db.refresh(new_order)
+
+    for data in order_items_to_save:
+        new_order_item = models.OrderItemDB(
+            order_id=new_order.id,
+            product_id=data["product_id"],
+            quantity=data["quantity"],
+            price_at_purchase=data["price_at_purchase"]
+        )
+        db.add(new_order_item)
+    
+    db.query(models.BasketDB).filter(models.BasketDB.user_id == user.id).delete()
+    db.commit()
+
+    return Order(
+        id=new_order.id,
+        date=str(new_order.date),
+        total=new_order.total_price,
+        items=response_items
+    )
+        
+                
+    
 
 
 @app.post("/basket/add")

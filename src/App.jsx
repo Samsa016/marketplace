@@ -18,7 +18,7 @@ import './styles/historyProd.css'
 import './styles/myOrders.css'
 import './styles/productInfo.css'
 import './styles/footer.css'
-
+import './styles/skeleton.css'
 
 function App() {
     return (

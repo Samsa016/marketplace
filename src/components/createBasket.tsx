@@ -5,6 +5,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { FaBasketShopping } from "react-icons/fa6";
 import { Product } from "../types/product";
 import { BasketContextType } from "../types/basket";
+import { SkeletonBasket } from "./SkeletonAdd";
 
 export function CreateBasket(): JSX.Element {
     const basketContext = useContext<BasketContextType | null>(MassiveBasket)
@@ -13,7 +14,7 @@ export function CreateBasket(): JSX.Element {
         return <div>Ошибка: контекст не инициализирован</div>;
     }
     
-    const { basket, deleteFromBasket } = basketContext;
+    const { basket, deleteFromBasket, loading } = basketContext;
     const [totalSum, setTotalSum] = useState<number>(0);
 
     useEffect(() => {
@@ -24,6 +25,10 @@ export function CreateBasket(): JSX.Element {
 
         setTotalSum(toSum);
     }, [basket]);
+
+    if (loading) {
+        return <SkeletonBasket />
+    }
 
     return (
         <div>

@@ -5,6 +5,7 @@ import '../styles/historyProd.css'
 import { FaArrowLeft } from "react-icons/fa";
 import { Product } from '../types/product'
 import { HistoryContextType } from '../types/history';
+import { SkeletonHistory } from "../components/SkeletonAdd";
 
 export function CreateHistory(): JSX.Element {
     const hisContext = useContext<HistoryContextType | null>(HistoryMassive)
@@ -14,7 +15,12 @@ export function CreateHistory(): JSX.Element {
     }
 
     const historyMassive = hisContext.historyMassive;
+    const loading = hisContext.loading
 
+    if (loading) {
+        return <SkeletonHistory />;
+    }
+    
     return (
         <div>
             <Link className='title_list' to="/">PerfectShop</Link>

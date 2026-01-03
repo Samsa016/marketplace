@@ -11,6 +11,7 @@ import { BasketContextType } from '../types/basket';
 import { FavorContextType } from '../types/favorites';
 import { HistoryContextType } from '../types/history';
 import { CgProfile } from "react-icons/cg";
+import { SkeletonMainMenu } from "../components/SkeletonAdd"
 import '../styles/Authorization.css';
 
 
@@ -67,6 +68,7 @@ export function MainMenu(): JSX.Element {
 
     const [authorizationModal, setAuthorizationModal] = useState<boolean>(false);
 
+    const [loading, setLoading] = useState<boolean>(true)
     const [isAuth, setIsAuth] = useState<boolean>(false);
 
     const handleAddToBasket = (product: Product, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -118,6 +120,7 @@ export function MainMenu(): JSX.Element {
             localStorage.removeItem('basket');
             localStorage.removeItem('favourites');
             localStorage.removeItem('history');
+            localStorage.removeItem('orders')
             setIsAuth(false);
             
             navigate('/');
@@ -160,8 +163,12 @@ export function MainMenu(): JSX.Element {
 
     useEffect(()=> {
         const fetchResponse = async (): Promise<void> => {
+        const mounted = true
             try {
                 const data = await CatalogApi()();
+
+                if (!mounted) return;
+
                 if (data.length > 0 && Array.isArray(data)) {
                     setProducts(data);
                 } else {
@@ -169,12 +176,17 @@ export function MainMenu(): JSX.Element {
                 }
             } catch (error) {
                 console.error("Ошибка при загрузке продуктов:", error);
+                if (mounted) setProducts([])
+            } finally {
+                if (mounted) setLoading(false)
             }
         }
 
         fetchResponse();
         
     }, [])
+
+    if (loading) return SkeletonMainMenu()
 
     const catFinalSort = (): Product[] => {
         let result = products;

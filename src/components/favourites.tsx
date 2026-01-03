@@ -13,44 +13,64 @@ interface FavouritesProviderProps {
 
 export function FavouritesProvider({ children }: FavouritesProviderProps): JSX.Element{
     const [ favourites, setFavourites ] = useState<Product[]>([]);
+    const [loading, setLoading] = useState<boolean>(true)
 
-        useEffect(() => {
-            const token = localStorage.getItem('token');
+useEffect(() => {
+        const token = localStorage.getItem('token');
+        let mounted = true;
 
-            if (token) {
-                fetch("http://localhost:8000/favorites", {
-                    headers: {
-                        "Authorization": "Bearer " + token
-                    }
-                })
-                .then(res => {
-                    if (res.ok) return res.json();
-                    throw new Error('Ошибка при загрузке избранного с сервера');
-                })
-                .then(serverBasket => {
+        if (token) {
+            fetch("http://localhost:8000/favorites", {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            })
+            .then(res => {
+                if (res.status === 401) {
+                    localStorage.removeItem('token');
+                    return [];
+                }
+                
+                if (res.ok) return res.json();
+                throw new Error('Ошибка при загрузке избранного с сервера');
+            })
+            .then(serverBasket => {
+                if (mounted) {
                     setFavourites(serverBasket);
                     console.log("Избранное загружено с сервера");
-                })
-                .catch(error => {
-                    console.error('Ошибка:', error);
-                })
-            } else {
-                try {
-                    const up = getFavourites();
-                    if (Array.isArray(up)) {
-                        setFavourites(up as Product[])
+                    setLoading(false);
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                if (mounted) {
+                    setFavourites([]);
+                    setLoading(false);
+                }
+            })
+
+        } else {
+
+            try {
+                const up = localStorage.getItem('favourites'); 
+                if (up) {
+                    const parsed = JSON.parse(up);
+                    if (Array.isArray(parsed)) {
+                        setFavourites(parsed as Product[])
                     } else {
-                        console.error("Неверный формат данных для избранного");
                         setFavourites([]);
                     }
-                } catch (error) {
-                    console.error('Ошибка при загрузке избранного:', error)
-                } finally {
-                    console.log("Загрузка избранного завершена")
                 }
+            } catch (error) {
+                console.error('Ошибка при загрузке избранного:', error)
+                setFavourites([]);
+            } finally {
+                if (mounted) setLoading(false);
             }
-
-        }, [])
+        }
+        
+        return () => { mounted = false; };
+    }, [])
 
         const addFavourites = (product: Product): void => {
             if (favourites.some(p => p.id === product.id)) return;
@@ -134,7 +154,8 @@ export function FavouritesProvider({ children }: FavouritesProviderProps): JSX.E
         const value: FavorContextType = {
             favourites,
             addFavourites,
-            deleteFavorites
+            deleteFavorites,
+            loading
         } 
 
         return (

@@ -6,15 +6,19 @@ import { FaArrowLeft } from "react-icons/fa";
 import "../styles/favorites.css"
 import { Product } from "../types/product";
 import { FavorContextType } from "../types/favorites";
+import { SkeletonFavorites } from "./SkeletonAdd";
 
 export function CreateFavorites(): JSX.Element {
     const favoritesContext = useContext<FavorContextType | null>(FavouritesMassive)
-    
     if (!favoritesContext) {
         return <h1>Ошибка: контент для избраного не инициализирован</h1>
     }
 
-    const { favourites, deleteFavorites } = favoritesContext;
+    const { favourites, deleteFavorites, loading } = favoritesContext;
+
+    if (loading) {
+        return <SkeletonFavorites />;
+    }
 
     return (
         <div>

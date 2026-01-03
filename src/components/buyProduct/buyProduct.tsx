@@ -1,28 +1,59 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft } from "react-icons/fa";
-import { Product } from '../../types/product';
+import { SkeletonOrders } from '../SkeletonAdd';
+import { useEffect, useState } from 'react'
 
+interface OrderItem {
+    product_id: number;
+    quantity: number;
+    price: number;
+    title: string;
+}
 export interface Order {
     id: string;
     date: string;
     total: number;
-    items: Product[];
+    items: OrderItem[];
+
 }
 
 export function MyOrders(): JSX.Element {
+    const [orders, setOrders] = useState<Order[] | []>([])
+    const [loading, setLoading] = useState<boolean>(true)
 
-    const orders: Order[] = (() => {
-        try {
-            const stored = localStorage.getItem('orders');
-            return stored ? JSON.parse(stored) as Order[] : [];
-        } catch (error) {
-            console.error('Ошибка при чтении заказов из localStorage:', error);
-            return [];
-        }
-    
+useEffect(() => {
+            const token = localStorage.getItem('token')
+            
+            fetch("http://localhost:8000/product/myorders", {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            })
+            .then(res => {
+                if (res.status === 401) {
+                    localStorage.removeItem('token');
+                    return [];
+                }
+                
+                if (!res.ok) throw new Error("Ошибка при обработке моих заказов");
+                return res.json();
+            })
+            .then(data => {
+                setOrders(data);
+                console.log("Мои заказы загружены с сервера");
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error("Ошибка catch:", error);
+                setLoading(false);
+            });
+        
+    }, []);
 
-    })();
+    if (loading) {
+        return <SkeletonOrders />;
+    }
 
     function formatOrderDate(d: string | Date = new Date()): string {
     

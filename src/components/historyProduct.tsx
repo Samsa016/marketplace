@@ -13,10 +13,11 @@ interface HistoryProviderProps {
 
 export function HistoryProduct({ children }: HistoryProviderProps): JSX.Element {
     const [historyMassive, setHistoryMassive] = useState<Product[]>([]);
-
+    const [loading, setLoading] = useState<boolean>(true)
     useEffect(() => {
         const token = localStorage.getItem('token');
         const localstorage_history = localStorage.getItem('history');
+        const mounted = true
 
         if (token) {
             fetch("http://localhost:8000/history", {
@@ -26,14 +27,23 @@ export function HistoryProduct({ children }: HistoryProviderProps): JSX.Element 
                 },
             })
             .then(res => {
+                if (res.status === 401) {
+                    localStorage.removeItem('token');
+                    return [];
+                }
                 if (res.ok) return res.json();
-                throw new Error('Ошибка при загрузке истории с сервера');
+                throw new Error('Ошибка...');
             })
             .then(serverHistory => {
-                setHistoryMassive(serverHistory);
-                console.log("История загружена с сервера");
-            }
-            )
+                if (mounted) {
+                    setHistoryMassive(serverHistory);
+                    setLoading(false);
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                if (mounted) setLoading(false);
+            });
         } else {
             try {
                 const hist = getHistory();
@@ -45,6 +55,8 @@ export function HistoryProduct({ children }: HistoryProviderProps): JSX.Element 
                 }
             } catch (error) {
                 console.error('Ошибка при загрузке истории:', error);
+            } finally { 
+                if(mounted) setLoading(false)
             }
         }
         
@@ -75,6 +87,7 @@ export function HistoryProduct({ children }: HistoryProviderProps): JSX.Element 
         })
         .then(data => {
             console.log("История успешно обновлена на сервере");
+            setLoading(false)
         })
         .catch(error => {
             console.error('Ошибка:', error);
@@ -94,7 +107,8 @@ export function HistoryProduct({ children }: HistoryProviderProps): JSX.Element 
 
     const value: HistoryContextType = {
         historyMassive,
-        addHistory
+        addHistory,
+        loading
     }
 
     return (

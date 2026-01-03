@@ -96,43 +96,48 @@ export function BuyProduct(): JSX.Element {
         }
     }
 
-    function orderConfirm(): void {
-        const { iso, pretty } = formatOrderDate();
-        const id = generateOrderNumber();
+function orderConfirm(): void {
+        const token = localStorage.getItem('token');
 
-        const newOrder: NewOrder = {
-            id,
-            date: iso,
-            datePretty: pretty,
-            items: basket.map((prod: Product) => ({ id: prod.id ?? null, title: prod.title ?? '', price: prod.price ?? 0 })),
-            total: totalSum,
-            itemsCount: basket.length,
-            customer: { name, email, phone, address, city },
-            payment: { method: paymentMethod }
-        };
-
-        const existing: NewOrder[] = (() => {
-            try {
-                const s = localStorage.getItem('orders');
-                return s ? JSON.parse(s) as NewOrder[] : [];
-            } catch (e) {
-                console.error("Ошибка при чтении заказов из localStorage:", e);
-                return [];
-            }
-        })();
-
-        const updateOrder: NewOrder[] = [...existing, newOrder];
-
-        try {
-            localStorage.setItem('orders', JSON.stringify(updateOrder));
-        } catch (error) {
-            console.error('Ошибка сохранения заказов в LocalStorage:', error);
+        if (!token) {
+            alert("Ошибка авторизации. Пожалуйста, войдите в аккаунт.");
+            return;
         }
 
-        console.log('Заказ оформлен:', newOrder);
-        setLastOrder(newOrder);
-        clearBasket();
-        setStep(4);
+        fetch("http://localhost:8000/product/buy", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Ошибка при создании заказа");
+            return res.json();
+        })
+        .then(serverData => {
+
+            const completedOrder: NewOrder = {
+                id: String(serverData.id),
+                date: serverData.date,
+                datePretty: formatOrderDate(new Date(serverData.date)).pretty,
+                items: serverData.items,
+                total: serverData.total,
+                itemsCount: serverData.items.length,
+                customer: { name, email, phone, address, city },
+                payment: { method: paymentMethod }
+            };
+
+            console.log('Заказ успешно создан на сервере:', completedOrder);
+
+            setLastOrder(completedOrder);
+            clearBasket();
+            setStep(4);
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            alert("Не удалось оформить заказ. Возможно, корзина пуста.");
+        });
     }
 
 

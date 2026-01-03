@@ -4,6 +4,7 @@ import { createContext } from "react";
 import { BasketContextType } from "../types/basket";
 import { Product } from "../types/product"; 
 
+
 export const MassiveBasket = createContext<BasketContextType | null>(null);
 
 interface ContextBasketProps {
@@ -12,9 +13,12 @@ interface ContextBasketProps {
 
 export function ContextBasket({ children }: ContextBasketProps): JSX.Element {
     const [basket, setBasket] = useState<Product[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+
 
     useEffect(() => {
         const token = localStorage.getItem('token');
+        const mounted = true
 
         if (token) {
             fetch("http://localhost:8000/basket", {
@@ -29,29 +33,36 @@ export function ContextBasket({ children }: ContextBasketProps): JSX.Element {
             .then(serverBasket => {
                 setBasket(serverBasket);
                 console.log("Корзина загружена с сервера");
+                if (mounted) setLoading(false)
             })
             .catch(error => {
                 console.error('Ошибка:', error);
+                if (mounted) setBasket([])
             })
+            
 
         } else {
             try {
                 const loadedBasket = getBasket();
+                if (!mounted) return;
                 if (Array.isArray(loadedBasket)) {
                     setBasket(loadedBasket as Product[])
                 } else {
                     setBasket([]);
+                    setLoading(false)
                 }
             } catch (error) {
                 console.error('Ошибка при загрузке корзины:', error);
-                setBasket([]);
+                if (mounted) setBasket([]);
+            } finally {
+                if (mounted) setLoading(false)
             }
         }
 
 
     }, [])
 
-const addToBasket = (product: Product): void => {
+    const addToBasket = (product: Product): void => {
 
         if (basket.some(p => p.id === product.id)) return;
 
@@ -144,7 +155,8 @@ const deleteFromBasket = (deleteToIndex: number): void => {
         basket,
         addToBasket,
         deleteFromBasket,
-        clearBasket
+        clearBasket,
+        loading
     }
 
     return (
