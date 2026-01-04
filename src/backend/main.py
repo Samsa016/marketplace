@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
 from pydantic import BaseModel
 from typing import Optional, Dict, Union, List
 from auth import get_current_user, User, router as auth_router, get_current_user, ProductInBasket, ProductInFavorite, ProductInHistory
@@ -9,6 +9,8 @@ from database import SessionLocal, engine, get_db
 from models import BasketDB
 import models
 from datetime import datetime
+import uuid
+from yookassa import Configuration, Payment
 
 class Review(BaseModel):
     reviewerName: str
@@ -51,8 +53,14 @@ class Order(BaseModel):
     total: float
     items: List[OrderItemProduct]
 
+class PaymentResponse(BaseModel):
+    order_id: int
+    payment_url: str
 
 app = FastAPI()
+
+Configuration.account_id = '1241051'
+Configuration.secret_key = 'test_Ozla4iYb52zfA4m8ubajDiW_x1mEhcgfYSc35Y_GeZs'
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -145,7 +153,7 @@ async def check_myorder(current_user: User = Depends(get_current_user), db: Sess
             
     return final_orders
 
-@app.post("/product/buy", response_model=Order)
+@app.post("/product/buy", response_model=PaymentResponse)
 async def create_order(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     user = db.query(models.UserDB).filter(models.UserDB.id == current_user.id).first()
     if not user:
@@ -156,65 +164,95 @@ async def create_order(current_user: User = Depends(get_current_user), db: Sessi
 
     tot_price = 0.0
     order_items_to_save = []
-    response_items = []
 
     async with httpx.AsyncClient() as client:
-        for product in basket:
-                response = await client.get(f"https://dummyjson.com/products/{product.product_id}")
+        for item in basket:
+            try:
+                response = await client.get(f"https://dummyjson.com/products/{item.product_id}")
                 if response.status_code == 200:
                     data = response.json()
-                    prod_final = Product(**data)
-
-                    tot_price += prod_final.price
-
-                    order_items_to_save.append({
-                        "product_id" : prod_final.id,
-                        "quantity" : product.quantity,
-                        "price_at_purchase" : prod_final.price
-                    })
-
-                    response_items.append(OrderItemProduct(
-                    product_id=prod_final.id,
-                    quantity=product.quantity,
-                    price=prod_final.price,
-                    title=prod_final.title
-                ))
+                    p_price = float(data.get("price", 0))
+                    tot_price += p_price * item.quantity
                     
-                else:
-                    print(f"Ошибка товара {product.product_id}")
+                    order_items_to_save.append({
+                        "product_id": item.product_id,
+                        "quantity": item.quantity,
+                        "price_at_purchase": p_price
+                    })
+            except Exception as e:
+                print(f"Error: {e}")
 
-    
     new_order = models.OrderDB(
         user_id=user.id,
         total_price=tot_price,
-        date=datetime.utcnow()
+        date=datetime.utcnow(),
+        status="Pending" 
     )
     db.add(new_order)
     db.commit()
     db.refresh(new_order)
 
     for data in order_items_to_save:
-        new_order_item = models.OrderItemDB(
+        new_item = models.OrderItemDB(
             order_id=new_order.id,
             product_id=data["product_id"],
             quantity=data["quantity"],
             price_at_purchase=data["price_at_purchase"]
         )
-        db.add(new_order_item)
-    
-    db.query(models.BasketDB).filter(models.BasketDB.user_id == user.id).delete()
-    db.commit()
+        db.add(new_item)
 
-    return Order(
-        id=new_order.id,
-        date=str(new_order.date),
-        total=new_order.total_price,
-        items=response_items
-    )
-        
-                
-    
+    try:
+        idempotence_key = str(uuid.uuid4())
+        payment = Payment.create({
+            "amount": {
+                "value": str(tot_price),
+                "currency": "USD"
+            },
+            "confirmation": {
+                "type": "redirect",
+                "return_url": "http://localhost:5173/payment-success"
+            },
+            "capture": True,
+            "description": f"Заказ №{new_order.id}"
+        }, idempotence_key)
+        new_order.payment_id = payment.id
+        db.commit()
 
+        db.query(models.BasketDB).filter(models.BasketDB.user_id == user.id).delete()
+        db.commit()
+
+        return PaymentResponse(
+                order_id=new_order.id,
+                payment_url=payment.confirmation.confirmation_url
+        )
+    
+    except Exception as e:
+        print(f"Ошибка ЮКассы: {e}")
+        db.delete(new_order) 
+        db.commit()
+        raise HTTPException(status_code=500, detail="Не удалось создать платеж")
+
+@app.post("/webhook")
+async def yookassa_webhook(request: Request, db: Session = Depends(get_db)):
+    event = await request.json()
+    print("Получен вебхук", event)
+
+    if event.get("event") == "payment.succeeded":
+
+        payment_data = event.get("object", {})
+        payment_id = payment_data.get("id")
+
+        print(f"Оплата прошла номер заказа №{payment_id}")
+
+        order = db.query(models.OrderDB).filter(payment_id == models.OrderDB.payment_id).first()
+
+        if order:
+            order.status = "Paid"
+            db.commit()
+            print(f"Статус заказа {order.id} изменен на Paid")
+        else:
+            print("Заказ с таким payment_id не найден в базе")
+    return {"status": "ok"}
 
 @app.post("/basket/add")
 async def add_to_basket(item: ProductInBasket, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):

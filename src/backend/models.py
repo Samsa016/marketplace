@@ -52,6 +52,7 @@ class OrderDB(Base):
     date = Column(DateTime, default=datetime.utcnow)
     total_price = Column(Float, default=0.0)
     status = Column(String, default="Processing")
+    payment_id = Column(String, nullable=True)
 
     owner = relationship("UserDB", back_populates="orders")
     items = relationship("OrderItemDB", back_populates="order")

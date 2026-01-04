@@ -10,6 +10,7 @@ import { MyOrders } from './components/buyProduct/buyProduct.jsx';
 import { Footer } from './components/Footer.jsx';
 import { Registration } from './components/Authorization/register.tsx';
 import { Login } from './components/Authorization/login.tsx';
+import { PaymentSuccess } from './components/PaymentSuccess';
 import './styles/palette.css';
 import './styles/buyProduct.css';
 import './styles/palette2.css'
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/product/myorders" element={<MyOrders />}></Route>
                 <Route path="/register" element={<Registration />}></Route>
                 <Route path="/login" element={<Login />}></Route>
+                <Route path="/payment-success" element={<PaymentSuccess />}></Route>
             </Routes>
             <Footer />
         </>
