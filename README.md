@@ -5,8 +5,9 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=flat-square&logo=typescript)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite)
+![YooKassa](https://img.shields.io/badge/YooKassa-Payment%20Gateway-orange?style=flat-square)
 
-A full-featured, modern e-commerce marketplace built with React, TypeScript, and FastAPI. Experience seamless shopping with advanced features like user authentication, shopping cart, favorites, order history, and responsive design.
+A full-featured, modern e-commerce marketplace built with React, TypeScript, and FastAPI. Experience seamless shopping with advanced features like user authentication, shopping cart, favorites, order history, secure payments via YooKassa, and responsive design.
 
 ## ✨ Features
 
@@ -17,21 +18,30 @@ A full-featured, modern e-commerce marketplace built with React, TypeScript, and
 - **Responsive Design**: Optimized for desktop, tablet, and mobile devices
 
 ### 👤 User Management
-- **User Registration & Authentication**: Secure JWT-based authentication system
+- **User Registration & Authentication**: Secure JWT-based authentication system with form validation
 - **User Profiles**: Personalized shopping experience with account management
 - **Order History**: Track all your purchases and order details
+- **Local Storage Migration**: Seamless transfer of cart and favorites from local storage to account upon login
 
 ### 🛍️ Shopping Features
 - **Shopping Cart**: Add, remove, and manage items in your cart
 - **Favorites/Wishlist**: Save products for later with a dedicated favorites section
 - **View History**: Track recently viewed products
+- **Order Management**: Create orders, process payments, and view order status
 - **Smooth Animations**: Beautiful micro-interactions powered by Framer Motion
+
+### 💳 Payment & Orders
+- **Secure Payments**: Integrated YooKassa payment gateway for safe transactions
+- **Webhook Integration**: Asynchronous payment status updates via webhooks
+- **Order Processing**: Automated order creation and status tracking
+- **Payment Success Page**: Confirmation page after successful payment
 
 ### 🎨 Design & UX
 - **Modern UI**: Clean, professional design with consistent branding
 - **Intuitive Navigation**: Easy-to-use interface with clear visual hierarchy
 - **Loading States**: Smooth loading experiences and error handling
 - **Toast Notifications**: User-friendly feedback for all actions
+- **Form Validation**: Client-side validation for login, registration, and order forms
 
 ## 🛠️ Tech Stack
 
@@ -51,6 +61,8 @@ A full-featured, modern e-commerce marketplace built with React, TypeScript, and
 - **JWT** - JSON Web Token authentication
 - **Passlib** - Password hashing
 - **Pydantic** - Data validation
+- **YooKassa** - Payment gateway integration
+- **httpx** - Asynchronous HTTP client for external API calls
 
 ### Styling
 - **Custom CSS** - Modular, maintainable stylesheets
@@ -80,10 +92,20 @@ A full-featured, modern e-commerce marketplace built with React, TypeScript, and
    venv\Scripts\activate
    # On macOS/Linux:
    source venv/bin/activate
-   pip install -r requirements.txt
+   pip install fastapi uvicorn sqlalchemy pydantic passlib[bcrypt] python-jose[cryptography] yookassa httpx
    ```
 
-3. **Frontend Setup**
+3. **Payment Gateway Configuration**
+   - Sign up for a YooKassa account at [yookassa.ru](https://yookassa.ru)
+   - Get your `account_id` and `secret_key`
+   - Update the credentials in `src/backend/main.py`:
+     ```python
+     Configuration.account_id = 'your_account_id'
+     Configuration.secret_key = 'your_secret_key'
+     ```
+   - Configure webhook URL in YooKassa dashboard: `http://your-domain.com/webhook`
+
+4. **Frontend Setup**
    ```bash
    # From the root directory
    npm install
@@ -119,20 +141,23 @@ npm run preview
 marketplace/
 ├── src/
 │   ├── backend/              # Python FastAPI backend
-│   │   ├── auth.py          # Authentication & authorization
+│   │   ├── auth.py          # Authentication & authorization with local storage migration
 │   │   ├── database.py      # Database configuration
-│   │   ├── main.py          # Main API endpoints
-│   │   ├── models.py        # SQLAlchemy models
-│   │   └── requirements.txt # Python dependencies
+│   │   ├── main.py          # Main API endpoints, orders, payments, webhooks
+│   │   └── models.py        # SQLAlchemy models (User, Basket, Favorites, History, Orders)
 │   ├── components/          # React components
-│   │   ├── Authorization/   # Login/Register components
+│   │   ├── Authorization/   # Login/Register components with validation
 │   │   ├── basket.tsx       # Cart context
-│   │   ├── buyProduct/      # Order components
+│   │   ├── buyProduct/      # Order and payment components
+│   │   │   ├── buyProduct.tsx    # Order history page
+│   │   │   └── createBuyProduct.tsx # Order creation and payment flow
 │   │   ├── createBasket.tsx # Cart page
 │   │   ├── createFavorites.tsx # Favorites page
 │   │   ├── createHistory.tsx # History page
 │   │   ├── Footer.tsx       # Site footer
-│   │   └── productInfo.tsx  # Product detail page
+│   │   ├── PaymentSuccess.tsx # Payment confirmation page
+│   │   ├── productInfo.tsx  # Product detail page
+│   │   └── SkeletonAdd.tsx  # Loading skeletons
 │   ├── context/             # React contexts
 │   ├── pages/               # Main pages
 │   │   ├── Catalog.tsx      # Product catalog logic
@@ -142,13 +167,14 @@ marketplace/
 │   │   ├── palette.css      # Color palette & global styles
 │   │   ├── registration.css # Registration page styles
 │   │   ├── login.css        # Login page styles
+│   │   ├── buyProduct.css   # Order and payment styles
 │   │   └── ...              # Other component styles
 │   ├── types/               # TypeScript type definitions
-│   ├── App.jsx              # Main app component
+│   ├── App.jsx              # Main app component with routing
 │   ├── main.jsx             # App entry point
 │   └── index.css            # Global styles
 ├── public/                  # Static assets
-├── package.json             # Node.js dependencies
+├── package.json             # Node.js dependencies (React, TypeScript, Framer Motion, etc.)
 ├── vite.config.js           # Vite configuration
 └── README.md               # Project documentation
 ```
@@ -157,20 +183,28 @@ marketplace/
 
 ### Authentication
 - `POST /auth/register` - User registration
-- `POST /auth/login` - User login
+- `POST /auth/login` - User login with local storage migration
 - `GET /auth/me` - Get current user info
 
 ### Products
-- `GET /products` - Get all products
+- `GET /products` - Get all products (from DummyJSON API)
 - `GET /products/{id}` - Get product by ID
+- `GET /categories/{categoryid}` - Get products by category
 
 ### User Data
 - `GET /basket` - Get user's cart
-- `POST /basket` - Add item to cart
-- `DELETE /basket/{item_id}` - Remove item from cart
+- `POST /basket/add` - Add item to cart
+- `POST /basket/remove` - Remove item from cart
 - `GET /favorites` - Get user's favorites
-- `POST /favorites` - Add item to favorites
-- `DELETE /favorites/{item_id}` - Remove item from favorites
+- `POST /favorites/add` - Add item to favorites
+- `POST /favorites/remove` - Remove item from favorites
+- `GET /history` - Get user's view history
+- `POST /history/add` - Add item to history
+
+### Orders & Payments
+- `POST /product/buy` - Create order and initiate payment via YooKassa
+- `GET /product/myorders` - Get user's order history
+- `POST /webhook` - YooKassa webhook for payment status updates
 
 ## 🎨 Design System
 
@@ -217,6 +251,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - **DummyJSON API** for providing sample product data
+- **YooKassa** for secure payment processing
 - **React Community** for excellent documentation and tools
 - **FastAPI** for the amazing Python web framework
 - **Open source contributors** for the libraries used
