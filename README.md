@@ -9,6 +9,9 @@
 
 A full-featured, modern e-commerce marketplace built with React, TypeScript, and FastAPI. Experience seamless shopping with advanced features like user authentication, shopping cart, favorites, order history, secure payments via YooKassa, and responsive design.
 
+🚧 CURRENTLY UNDER ACTIVE REFACTORING TO NEXT.JS 14 STACK 🚧
+Цель: Миграция легаси-кода, внедрение Server Actions и оптимизация производительности.
+
 ## ✨ Features
 
 ### 🛒 Core Shopping Experience
