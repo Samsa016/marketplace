@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, Request
+from fastapi import FastAPI, Depends, HTTPException, Request, responses
 from pydantic import BaseModel
 from typing import Optional, Dict, Union, List
 from auth import get_current_user, User, router as auth_router, get_current_user, ProductInBasket, ProductInFavorite, ProductInHistory
@@ -11,6 +11,7 @@ import models
 from datetime import datetime
 import uuid
 from yookassa import Configuration, Payment
+import asyncio
 
 class Review(BaseModel):
     reviewerName: str
@@ -358,16 +359,19 @@ async def get_history(current_user: User = Depends(get_current_user), db: Sessio
     history_items = db.query(models.HistoryDB).filter(models.HistoryDB.user_id == current_user.id).order_by(models.HistoryDB.viewed_at.desc()).all()
     products_in_history = []
     async with httpx.AsyncClient() as client:
-        for item in history_items:
-            try:
-                response = await client.get(f"https://dummyjson.com/products/{item.product_id}")
+        
+        tasks = [
+            client.get(f"https://dummyjson.com/products/{item.product_id}")
+            for item in history_items
+        ]
 
-                if response.status_code == 200:
-                    data = response.json()
-                    product = Product(**data)
-                    products_in_history.append(product)
-            except Exception as e:
-                print(f"Ошибка получения товара {item.product_id}: {e}")
+        responses = await asyncio.gather(*tasks, return_exceptions=True)
+
+        for response in responses:
+            if isinstance(response, httpx.AsyncClient) and response.status_code == 200:
+                products_in_history.append(Product(**response.json()))
+            else:
+                print(f"Ошибка получения товара: {response}")
     return products_in_history
 
 @app.post("/history/add")

@@ -55,7 +55,7 @@ class OrderDB(Base):
     payment_id = Column(String, nullable=True)
 
     owner = relationship("UserDB", back_populates="orders")
-    items = relationship("OrderItemDB", back_populates="order")
+    items = relationship("OrderItemDB", back_populates="order", cascade="all, delete-orphan")
 
 class OrderItemDB(Base):
     __tablename__ = "order_items"
