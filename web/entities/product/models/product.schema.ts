@@ -31,9 +31,12 @@ export const ProductSchema = z.object({
     returnPolicy: z.string().optional().nullable(),
     minimumOrderQuantity: z.number().optional().nullable(),
 
-    meta: z.record(z.string().nullable()).optional().nullable(),
+    meta: z.unknown().optional().nullable(),
 
     quantity: z.number().optional().nullable(),
-})
+    
+    reviews: z.unknown().optional().nullable(),
+    tags: z.unknown().optional().nullable(),
+}).strip();
 
 export const productsArraySchema = z.array(ProductSchema);

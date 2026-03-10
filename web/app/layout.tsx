@@ -1,20 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { Inter } from "next/font/google";
+import "./globals.css"; 
+import { Header } from "@/widgets/header/ui/Header";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "PerfectShop",
-  description: "Маркетплейс на Next.js",
+  title: "MyMarket - FSD Next.js",
+  description: "Marketplace built with Next.js, Zustand, and FSD",
 };
 
 export default function RootLayout({
@@ -23,11 +16,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang="ru">
+      <body className={inter.className} style={{ margin: 0, padding: 0, backgroundColor: '#f9fafb' }}>
+        <Header />
+
+        <div style={{ minHeight: 'calc(100vh - 70px)' }}>
+            {children}
+        </div>
       </body>
     </html>
   );
