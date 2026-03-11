@@ -27,7 +27,7 @@ export const Header = () => {
 
             <nav style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
                 
-                <Link href="/favorites" style={{ textDecoration: 'none', color: 'white', position: 'relative' }}>
+                <Link href="/favourites" style={{ textDecoration: 'none', color: 'white', position: 'relative' }}>
                     <span style={{ fontSize: '18px' }}>❤️ Избранное</span>
                     {favoriteCount > 0 && (
                         <span style={{

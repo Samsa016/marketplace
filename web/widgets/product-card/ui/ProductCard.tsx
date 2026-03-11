@@ -5,9 +5,10 @@ import Image from "next/image";
 
 interface ProductCardProps {
     product: Product;
+    actionSlot: React.ReactNode
 }
 
-export const ProductCard = ({ product }: ProductCardProps) => {
+export const ProductCard = ({ product, actionSlot }: ProductCardProps) => {
     
     return (
         <article style={{
@@ -47,9 +48,14 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: 'auto' }}>
-                <AddBasketButton product={product} />
-                
-                <AddFavoriteButton product={product} />
+                {actionSlot !== undefined ? (
+                    actionSlot
+                    ) : (
+                        <>
+                            <AddBasketButton product={product} />
+                            <AddFavoriteButton product={product} />
+                        </>
+                    )}
             </div>
         </article>
     );
