@@ -1,8 +1,8 @@
 import { getProducts } from "@/entities/product/api/products";
-import { ProductCard } from "@/widgets/product-card/ui/ProductCard";
+import { FilteredProductList } from "@/widgets/filtered-product-list/ui/FilteredProductList";
+import { RecentlyViewed } from "@/widgets/recently-viewed/ui/RecentlyViewed";
 
 export default async function HomePage() {
-  
   const products = await getProducts();
 
   return (
@@ -21,16 +21,10 @@ export default async function HomePage() {
           Каталог товаров
       </h1>
       
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
-        gap: '24px' 
-      }}>
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      <FilteredProductList initialProducts={products} />
+
+      <hr style={{ border: 'none', borderTop: '1px solid #e5e7eb', marginBottom: '40px' }} />
+      <RecentlyViewed />
     </main>
   );
 }
-
